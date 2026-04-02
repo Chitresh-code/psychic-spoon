@@ -1,0 +1,4 @@
+# Connected apps for AutoSpec Evaluator.
+# Add entries when you connect APIs (reference env vars for secrets, never commit tokens).
+
+apps: []

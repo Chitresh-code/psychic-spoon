@@ -1,0 +1,13 @@
+name: "Sample Agent"
+description: "Starter custom GPT template—replace name, prompt, and knowledge with your use case"
+
+slug: sample-agent
+
+model: "inherit"
+
+capabilities:
+  - code_interpreter_and_data_analysis
+
+conversation_starters:
+  - "Help me get started with this agent"
+  - "What can you do?"

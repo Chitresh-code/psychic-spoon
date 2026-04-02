@@ -1,0 +1,13 @@
+name: "AutoSpec Evaluator"
+description: "Evaluate AutoSpec-generated ERDs against the PRD (Step 1), optional engineering ERD comparison (Step 2), optional scope-aligned comparison (Step 3), and optional Excel export bundling all completed steps"
+
+slug: autospec-evaluator
+
+model: "GPT-5.4 Thinking"
+
+capabilities:
+  - canvas
+  - code_interpreter_and_data_analysis
+
+conversation_starters:
+  - "I have a PRD and a generated ERD to evaluate"
