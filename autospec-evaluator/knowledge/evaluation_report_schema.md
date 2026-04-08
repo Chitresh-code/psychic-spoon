@@ -1,6 +1,8 @@
 # Step 1: PRD vs Generated ERD – Evaluation Report Schema
 
-Use this structure for the evaluation report after comparing the PRD to the generated ERD (DOCX).
+Use this structure for the evaluation report after comparing the PRD to the generated ERD (**DOCX** or **Markdown**).
+
+**System Context:** When the ERD includes a System Context block, follow **`system_context_schema.md`** for additional metrics and rules (no external GitHub/Confluence verification).
 
 ## Section order (strict)
 
@@ -19,11 +21,22 @@ All percentages are **0–100** (one decimal place is enough). State **numerator
 
 | Metric | Meaning | How to compute |
 |--------|---------|----------------|
-| **Structural completeness** | How fully the generated ERD implements the **canonical ERD shape** (sections present, in sensible order, populated enough to be usable). | Use the same six areas as Step 2: Document Metadata, Monthly Delivery Summary, Functional Engineering Deliverables, Non-Functional Engineering Deliverables, Engineering Epics, E2E Testing Plan. Per area: **1.0** = present and appropriately structured; **0.5** = present but wrong format, wrong table shape, or clearly incomplete; **0** = missing or not identifiable. **Structural completeness %** = (sum of six scores / 6) × 100. |
+| **Structural completeness** | How fully the generated ERD implements the **canonical ERD shape** (sections present, in sensible order, populated enough to be usable). | Use the same **seven** areas as Step 2 when System Context is present: Document Metadata, Monthly Delivery Summary, Functional Engineering Deliverables, Non-Functional Engineering Deliverables, Engineering Epics, E2E Testing Plan, **System Context**. If the generated ERD has **no** System Context block, use **six** areas only (same formula with divisor 6) and state that System Context was absent. Per area: **1.0** = present and appropriately structured; **0.5** = present but wrong format, wrong table shape, or clearly incomplete; **0** = missing or not identifiable. **Structural completeness %** = (sum of scores / N) × 100 where N is 6 or 7. **Detail:** See `system_context_schema.md` for System Context shape checks. |
 | **PRD coverage** | Share of PRD-trackable scope reflected in the ERD. | Build a **denominator**: count discrete PRD items you treat as in-scope (capabilities, functional requirements, explicit deliverables, and other explicit commitments in the PRD—be consistent and list the counting rule in the report). **Numerator**: how many have a **clear, defensible** reflection in the ERD (any reasonable section). **PRD coverage %** = (numerator / denominator) × 100. |
 | **Traceability accuracy** | Quality of ID/content mapping from ERD back to PRD. | **Denominator**: number of trace links you assess (e.g. ENG rows, FR references, epics tied to requirements—exclude bare AutoSpec ID tokens as “errors” by themselves). **Numerator**: links that **correctly** map to a PRD item. Broken, missing, or invented mappings count in the denominator as **not** accurate. **Traceability accuracy %** = (numerator / denominator) × 100. |
 | **Hallucination rate** | Share of reviewed ERD **substance** that is unsourced. | **Denominator**: count of **substantive** ERD elements you reviewed (e.g. deliverable descriptions, epic narratives, NFR statements—**not** AutoSpec-generated IDs alone, not empty cells). **Numerator**: elements you classify as **unsourced / hallucinated** per the rules in §4. **Hallucination rate %** = (numerator / denominator) × 100. If you flagged zero unsourced items, the rate can be **0%** with denominator stated. |
 | **Content fidelity (PRD)** | Single rollup of how faithful ERD content is to the PRD, combining coverage and hallucinations. | **Default formula:** Content fidelity % = **PRD coverage % × (1 − hallucination rate / 100)**, using the percentages above (cap at 100, floor at 0). If hallucination rate is N/A, use **PRD coverage %** as fidelity and say so. Optionally add **−5** percentage points per **severe** traceability break (max −15), documented in the metrics notes. |
+
+### System Context metrics (Step 1)
+
+If the generated ERD includes a **System Context** block (Confluence/GitHub summaries as written in the document), add the following. **Do not** verify against live GitHub or Confluence—see `system_context_schema.md`.
+
+| Metric | Meaning | How to compute |
+|--------|---------|----------------|
+| **System Context structural completeness** | Expected subsections/tables for context summaries. | Checklist in `system_context_schema.md`; **%** = (passed / applicable) × 100. **N/A** if no System Context block. |
+| **Context–PRD alignment** | Context themes map to PRD requirements. | Numerator / denominator of context items mapping to PRD; **%** as in `system_context_schema.md`. **N/A** if no block. |
+| **Context relevance** | On-topic vs filler for this program. | **Relevance %** per `system_context_schema.md`. **N/A** if no block. |
+| **Unsupported / contradictory context claims** | Contradicts PRD or lacks PRD basis. | Rate % per `system_context_schema.md`. **N/A** if no substantive claims to score. |
 
 ---
 
@@ -39,11 +52,15 @@ Present a **summary table** (required). **Every row must include a confidence** 
 
 | Metric | Result | Basis (counts) | Confidence | Why (1 short phrase) |
 |--------|--------|----------------|------------|----------------------|
-| Structural completeness | …% | e.g. sum 5.0 / 6 section weights | Low / Med / High | e.g. one section ambiguous in DOCX |
+| Structural completeness | …% | e.g. sum 6.5 / 7 section weights | Low / Med / High | e.g. one section ambiguous in the uploaded document |
 | PRD coverage | …% | e.g. 18 / 20 PRD items | Low / Med / High | e.g. PRD unstructured |
 | Traceability accuracy | …% | e.g. 16 / 18 links | Low / Med / High | e.g. few trace rows |
 | Hallucination rate | …% | e.g. 2 / 45 substantive elements | Low / Med / High | e.g. sampled subset of cells |
 | Content fidelity (PRD) | …% | formula + adjustments | Low / Med / High | inherits weakest input or doc noise |
+| System Context structural completeness | …% or N/A | passed / applicable checks | Low / Med / High | omit row if no System Context block |
+| Context–PRD alignment | …% or N/A | e.g. 12 / 15 context items | Low / Med / High | … |
+| Context relevance | …% or N/A | e.g. 13 / 15 relevant | Low / Med / High | … |
+| Unsupported / contradictory context claims | …% or N/A | e.g. 1 / 20 claims | Low / Med / High | … |
 
 **Overall confidence in Step 1 scores** (required): **Low / Medium / High** plus **one sentence** on what limits certainty (e.g. PRD length, table extraction quality, overlapping requirements).
 
@@ -82,7 +99,7 @@ Then add **2–4 bullets**:
 ## 6. Recommendations
 
 - Prioritized list of actions (e.g. "Add NFR for X from PRD section Y", "Remove epic Z (unsourced)", "Fix milestone format in Epics table").
-- Reminder: "If you have an existing ERD from your engineering team (DOCX), you can share it for a structure comparison (Document Metadata, Monthly Delivery Summary, Functional/Non-Functional Deliverables, Engineering Epics, E2E Testing Plan)."
+- Reminder: "If you have an existing ERD from your engineering team (**DOCX** or **Markdown**), you can share it for a structure comparison (Document Metadata, Monthly Delivery Summary, Functional/Non-Functional Deliverables, Engineering Epics, E2E Testing Plan, **System Context** when present)."
 
 ---
 

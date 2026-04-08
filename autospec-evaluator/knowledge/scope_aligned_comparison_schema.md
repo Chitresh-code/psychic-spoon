@@ -2,11 +2,15 @@
 
 Use this schema **only after Step 2 is complete** and the user has **accepted** a scope-aligned re-analysis (or explicitly asked for it).
 
+**System Context:** See **`system_context_schema.md`** for scoped evaluation of the seventh section.
+
 ## When Step 3 applies
 
 Engineering ERDs often reflect **a slice of work** (e.g. one or two months, a single release, a subset of epics or deliverables) while the **generated ERD** may reflect **full PRD scope**. Step 2 compares **whole documents**, which can **unfairly lower scores** (extra rows, broader epics, fuller NFR/E2E tables in the generated ERD).
 
 Step 3 re-runs the same **spirit** as Step 2—engineering ERD remains the reference—but only for the **overlap scope** the engineering ERD actually covers.
+
+**System Context:** When present, include **System Context** as the **seventh** section (same checks + five facets, **scoped**). See **`system_context_schema.md`**.
 
 ## Preconditions
 
@@ -66,7 +70,7 @@ Optional **Step 2 vs Step 3** mini-table: headline metrics side-by-side with one
 
 ## 4. Section-by-section analysis
 
-Mirror Step 2’s section order (Document Metadata through E2E Testing Plan). For each:
+Mirror Step 2’s section order (Document Metadata through **System Context**). For each:
 
 - **Structure check ledger** and **Content facet ledger** (required for scored sections): same table formats as Step 2; label checks/facets as **scoped** (e.g. “STATUS column for in-scope functional rows”).
 - **Structure:** reference = engineering ERD **within scope**; assess generated ERD **only for the matching slice**; ledger rows must match **x/y**.
@@ -85,4 +89,4 @@ Then apply **Step 3 closing** in `workflow_operations.md`: offer **Excel export*
 
 ---
 
-**Output:** Markdown only (plus optional **.xlsx**: **≤4 sheets**, professional layout per `xlsx_report_export.md`).
+**Output:** Markdown only (plus optional **.xlsx**: see `xlsx_report_export.md` for sheet limits; Step 4 may add a fifth sheet when completed).
