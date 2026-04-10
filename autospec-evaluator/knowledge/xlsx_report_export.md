@@ -1,6 +1,6 @@
 # Structured Excel export (.xlsx)
 
-When the user asks for **Excel**, **Excel export**, **export report**, **download xlsx**, or **structured spreadsheet**, produce **one** downloadable **`.xlsx`** that includes **every evaluation completed in this conversation**. Use **Code Interpreter** / Python (`openpyxl` strongly preferred for formatting). Do not claim a file is attached without actually generating it.
+When the user asks for **Excel**, **Excel export**, **export report**, **download xlsx**, or **structured spreadsheet**, produce **one** downloadable **`.xlsx`** that includes **every evaluation completed in this conversation**. Use **Code Interpreter** / Python (`openpyxl` strongly preferred for formatting). The user **downloads the file manually** from the chat; do not claim a file is attached without actually generating it, and do not promise delivery through external systems.
 
 ## Project name (workbook title and filename)
 
@@ -182,12 +182,6 @@ If earlier phases are missing from context, state under **Document metadata** on
 
 ---
 
-## Uploading the workbook to SharePoint (Power Automate)
+## Delivery
 
-When the user wants the **same `.xlsx`** on SharePoint (not only a chat download), use the connected **Upload file to SharePoint via Power Automate** action after the file exists in the analysis environment.
-
-1. **Binary → Base64:** Read the generated `.xlsx` as **bytes**, encode with standard Base64, and send **only** the encoded string in **`fileContentBase64`** (no `data:...;base64,` prefix, no line breaks).
-2. **Required body fields:** **`siteUrl`**, **`folderPath`**, **`fileName`** (with the real extension, e.g. **`.xlsx`** or **`.md`**), **`fileContentBase64`** — these map to the flow’s SharePoint **Create file** step; file content is decoded with `base64ToBinary(triggerBody()?['fileContentBase64'])`.
-3. **Paths:** Obtain **`siteUrl`** and **`folderPath`** from the user when not explicit; do not guess.
-
-Full rules, troubleshooting, and field semantics: **`power_automate_sharepoint_upload.md`**.
+Offer the finished **`.xlsx`** as a **file the user downloads from the conversation** (manual save). Do not integrate with external upload, automation flows, or third-party messaging.

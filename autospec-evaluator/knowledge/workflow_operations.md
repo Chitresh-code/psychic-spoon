@@ -21,30 +21,30 @@ Use these templates (paraphrase the em-dash text if needed; **keep the bold cues
 
 ### After Step 1 (PRD Analysis complete)
 
-- **Generate report** — Produce the Excel workbook with **PRD Analysis** only (evaluations completed so far). Say **generate report**, **Excel export**, or **download xlsx**.
+- **Generate report** — Produce the Excel workbook with **PRD Analysis** only (evaluations completed so far) for **manual download** in the chat. Say **generate report**, **Excel export**, or **download xlsx**.
 - **Share your team's ERD** — Upload your engineering/reference ERD (**DOCX** or **Markdown**) to start **Step 2** (Engineering ERD comparison). Say **share your team's ERD**, **Step 2**, or upload the file.
 
 ### After Step 2 (Engineering ERD comparison complete)
 
 Always include both bullets below. If the engineering ERD looks **subset-scoped** (see Scope assessment), add **one short sentence before the list** explaining that Step 3 compares only the overlap (use the gist in Scope assessment below).
 
-- **Generate report** — Produce the Excel workbook including **PRD Analysis** and **Engineering ERD Comparison** (all evaluations so far). Say **generate report**, **Excel export**, or **download xlsx**.
+- **Generate report** — Produce the Excel workbook including **PRD Analysis** and **Engineering ERD Comparison** (all evaluations so far) for **manual download**. Say **generate report**, **Excel export**, or **download xlsx**.
 - **Step 3** — Run **scope-aligned analysis** (compare only the overlap if the engineering ERD covers a slice of the PRD). Say **Step 3**, **scope-aligned**, or **yes** to Step 3.
 
 If the engineering ERD looks **full-program**, you may add after the bullets one line: *Step 3 is optional—use it only if you want a scoped comparison anyway.*
 
 ### After Step 3 (Scoped alignment complete)
 
-- **Generate report** — Produce the Excel workbook with **PRD Analysis**, **Engineering ERD Comparison**, and **Scoped alignment review** (all evaluations completed so far). Say **generate report**, **Excel export**, or **download xlsx**.
+- **Generate report** — Produce the Excel workbook with **PRD Analysis**, **Engineering ERD Comparison**, and **Scoped alignment review** (all evaluations completed so far) for **manual download**. Say **generate report**, **Excel export**, or **download xlsx**.
 - **Step 4** — Run **System Context comparison** only (two ERDs: engineering ERD from Step 2 and/or another **DOCX/Markdown** ERD you upload). Say **Step 4**, **System Context comparison**, or **compare context**.
 
 ### After Step 4 (System Context comparison complete)
 
-- **Generate report** — Produce the full Excel workbook including **System Context comparison** and every other completed phase. Say **generate report**, **Excel export**, or **download xlsx**.
+- **Generate report** — Produce the full Excel workbook including **System Context comparison** and every other completed phase for **manual download**. Say **generate report**, **Excel export**, or **download xlsx**.
 
 ### After delivering an Excel file (same session)
 
-If the user asks to **upload** or **save a file to SharePoint** (Excel workbook, Markdown export, or other allowed type per **`power_automate_sharepoint_upload.md`**), use the connected Power Automate upload action: **`fileContentBase64`** = Base64 of the **raw file bytes** (no `data:` URI prefix); include **`siteUrl`**, **`folderPath`**, and **`fileName`** (correct extension, e.g. `.xlsx` or `.md`). Confirm destination with the user if unclear.
+The workbook is **only** available as a **download in this chat**; the user saves it locally. If they ask to push it to email, cloud storage, chat systems, or other tools, say that **only in-chat download** is supported and they can upload or forward the saved file themselves.
 
 If the user has **only** completed Step 1 and just received a workbook, offer a minimal follow-up list if they have not started Step 2:
 
