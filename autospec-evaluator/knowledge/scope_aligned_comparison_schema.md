@@ -39,7 +39,7 @@ Apply these **instead of** strict whole-document expectations from Step 2:
 | **Structural match** | Full table parity | Run **structure checks** only on **scoped rows/columns**; see §3. |
 | **Content alignment** | Full-section style match | Score **five facets** only on **in-scope** text/rows; see §3. |
 
-**Still strict where it matters:** invented content, wrong milestone format, or **in-scope** rows that contradict the engineering ERD should still be flagged. Lenience is about **scope mismatch**, not factual or format nonsense inside the slice.
+**Still strict where it matters:** invented content, wrong milestone format, wrong capability labels, misclassified deliverables (monitoring/alerting in Functional instead of NFR), or **in-scope** rows that contradict the engineering ERD should still be flagged. Lenience is about **scope mismatch**, not factual, classification, or format errors inside the slice.
 
 ## 3. Metric definitions (Step 3)
 

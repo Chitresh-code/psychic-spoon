@@ -26,6 +26,8 @@ All percentages are **0–100** (one decimal place is enough). State **numerator
 | **Traceability accuracy** | Quality of ID/content mapping from ERD back to PRD. | **Denominator**: number of trace links you assess (e.g. ENG rows, FR references, epics tied to requirements—exclude bare AutoSpec ID tokens as “errors” by themselves). **Numerator**: links that **correctly** map to a PRD item. Broken, missing, or invented mappings count in the denominator as **not** accurate. **Traceability accuracy %** = (numerator / denominator) × 100. |
 | **Hallucination rate** | Share of reviewed ERD **substance** that is unsourced. | **Denominator**: count of **substantive** ERD elements you reviewed (e.g. deliverable descriptions, epic narratives, NFR statements—**not** AutoSpec-generated IDs alone, not empty cells). **Numerator**: elements you classify as **unsourced / hallucinated** per the rules in §4. **Hallucination rate %** = (numerator / denominator) × 100. If you flagged zero unsourced items, the rate can be **0%** with denominator stated. |
 | **Content fidelity (PRD)** | Single rollup of how faithful ERD content is to the PRD, combining coverage and hallucinations. | **Default formula:** Content fidelity % = **PRD coverage % × (1 − hallucination rate / 100)**, using the percentages above (cap at 100, floor at 0). If hallucination rate is N/A, use **PRD coverage %** as fidelity and say so. Optionally add **−5** percentage points per **severe** traceability break (max −15), documented in the metrics notes. |
+| **Capability label accuracy** | Correctness of the Capability field in each ENG-XXX row against the capability names defined in the PRD. | Build a **canonical capability list** from the PRD (one entry per distinct capability heading, scope area, or feature grouping as stated in the PRD). **Denominator**: total ENG-XXX rows that carry a Capability field. **Numerator**: rows whose Capability value **matches** (case-insensitive, minor punctuation tolerance) one canonical capability name. A paraphrased, merged, or invented capability label counts as inaccurate. **Accuracy %** = (numerator / denominator) × 100. List every mismatch in §5 Traceability alongside the correct PRD capability name. |
+| **Section classification accuracy** | Whether deliverables are placed in the correct ERD section — Functional Engineering Deliverables vs Non-Functional Engineering Deliverables. | Scan every ENG-XXX and NFR-XXX item across both sections. For each, assess whether its description primarily concerns **internal monitoring, alerting, reporting, observability, SLA tracking, operational dashboards, or audit compliance** — these are non-functional by nature and belong in Non-Functional Deliverables. Items that describe **new features, API endpoints, workflow logic, or user-facing capabilities** belong in Functional Deliverables. **Denominator**: total items assessed. **Numerator**: items in the correct section. **Classification accuracy %** = (numerator / denominator) × 100. Flag every misplaced item in §3 Completeness with the recommended target section. |
 
 ### System Context metrics (Step 1)
 
@@ -57,6 +59,8 @@ Present a **summary table** (required). **Every row must include a confidence** 
 | Traceability accuracy | …% | e.g. 16 / 18 links | Low / Med / High | e.g. few trace rows |
 | Hallucination rate | …% | e.g. 2 / 45 substantive elements | Low / Med / High | e.g. sampled subset of cells |
 | Content fidelity (PRD) | …% | formula + adjustments | Low / Med / High | inherits weakest input or doc noise |
+| Capability label accuracy | …% | e.g. 12 / 14 ENG rows match PRD capability | Low / Med / High | e.g. PRD capability names ambiguous |
+| Section classification accuracy | …% | e.g. 42 / 45 items in correct section | Low / Med / High | e.g. monitoring items in Functional |
 | System Context structural completeness | …% or N/A | passed / applicable checks | Low / Med / High | omit row if no System Context block |
 | Context–PRD alignment | …% or N/A | e.g. 12 / 15 context items | Low / Med / High | … |
 | Context relevance | …% or N/A | e.g. 13 / 15 relevant | Low / Med / High | … |
@@ -80,6 +84,23 @@ Then add **2–4 bullets**:
   - **Suggested ERD location** (e.g. Functional Engineering Deliverables, Engineering Epics)
 - If none: state "No gaps; all PRD requirements are reflected in the ERD."
 
+### Misclassified deliverables
+
+- List every ENG-XXX or NFR-XXX item that appears in the **wrong section** (Functional vs Non-Functional). For each:
+  - **ERD ID** (e.g. ENG-013)
+  - **Current section** (e.g. Functional Engineering Deliverables)
+  - **Recommended section** (e.g. Non-Functional Engineering Deliverables)
+  - **Reason** (e.g. "describes internal monitoring and alerting — non-functional by nature")
+- Items whose descriptions primarily concern **internal monitoring, alerting, reporting, observability, SLA tracking, operational dashboards, or audit compliance** should be classified as non-functional. Items describing **new features, API endpoints, workflow logic, or user-facing capabilities** should be classified as functional.
+- If none: state "All deliverables are in the correct section."
+
+### Structural recommendations
+
+Surface these as standing recommendations when applicable (the evaluator cannot verify correctness, but can flag the omission):
+
+- **Owner attribution:** If the Functional Engineering Deliverables table has **no Owner or Team column**, recommend adding one so each ENG-XXX row names a responsible team or individual. The evaluator cannot determine correct owners from the PRD and ERD alone, but the absence of the column is a structural gap that engineering teams consistently flag.
+- **Repository coverage:** If any ENG-XXX row describes **frontend, UI, banner, dashboard, or client-side** work but the ERD (System Context, Dependencies, or deliverable description) declares **no frontend/UI repository**, flag this as a potential gap. The evaluator cannot verify which repositories exist, but the mismatch between UI-scoped deliverables and backend-only repo declarations is worth surfacing.
+
 ## 4. Hallucination / Unsourced Content
 
 - **Do not treat generated IDs as hallucination.** AutoSpec assigns FR-001, ENG-001, EPIC-001, etc. when the PRD has no explicit IDs; that is expected. List only **content** that has no basis in the PRD: invented capabilities, deliverable/epic names or descriptions, milestone labels, or other substantive text (not the IDs themselves).
@@ -95,6 +116,17 @@ Then add **2–4 bullets**:
 - Count of PRD requirements (by section or capability) and how many have a clear trace in the ERD. ERD may use AutoSpec-generated IDs (FR-xxx, ENG-xxx) when the PRD has no explicit IDs; assess whether each such ID **maps correctly** to a PRD requirement, not whether the ID appears in the PRD text.
 - Note any broken or missing mappings (e.g. ENG with no logical PRD requirement).
 - Milestone format check: confirm use of `M<number>` only; list any violations.
+
+### Capability label audit
+
+- Build the **canonical capability list** from the PRD (one entry per distinct capability heading or feature grouping).
+- For each ENG-XXX row, check whether the Capability field value matches one of the canonical names (case-insensitive, minor punctuation tolerance).
+- List every **mismatch** as a table row:
+  - **ENG ID** (e.g. ENG-006)
+  - **Current capability label** (what the ERD says)
+  - **Nearest PRD capability** (what it should say, or "no match found")
+  - **Issue** (e.g. "paraphrased", "merged two capabilities", "invented label")
+- If all labels match: state "All ENG-XXX capability labels match PRD-defined capabilities."
 
 ## 6. Recommendations
 

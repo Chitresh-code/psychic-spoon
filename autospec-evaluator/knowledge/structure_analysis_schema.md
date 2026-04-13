@@ -63,8 +63,8 @@ For each section, score **exactly five content facets** (if a facet does not app
 |---------|------------------------|
 | Document Metadata | naming consistency; date/version format; program/project fields; TBD vs filled; squad/owner style |
 | Monthly Delivery Summary | scope clarity; project boundaries; assumptions; dependencies; time horizon |
-| Functional Engineering Deliverables | row granularity vs ref; Jira/ticket style; STATUS/acceptance phrasing; trace wording; deliverable naming |
-| Non-Functional Engineering Deliverables | category style; measurability; link to epics; priority/severity; specificity |
+| Functional Engineering Deliverables | row granularity vs ref; Jira/ticket style; STATUS/acceptance phrasing; trace wording; deliverable naming; owner/team attribution; capability label accuracy vs PRD |
+| Non-Functional Engineering Deliverables | category style; measurability; link to epics; priority/severity; specificity; section classification (no misplaced functional items) |
 | Engineering Epics | epic sizing; milestone `M#` style; dependency phrasing; PRD link style; notes column |
 | E2E Testing Plan | scenario naming; step granularity; expected results; coverage linkage; table vs link pattern |
 | System Context | subsection alignment (Confluence vs GitHub blocks); table shapes vs ref; theme coverage vs ref; repo/stack **names as written**; ownership narrative style; freshness/labeling style |
@@ -193,11 +193,14 @@ Add **2–3 bullets**: interpretation (largest gaps by **numeric** gap, not only
 **Structure**
 - **Reference (engineering ERD):** Table columns and order (e.g. CAPABILITY | FUNCTIONAL ENGINEERING DELIVERABLES | STATUS | DESCRIPTION).
 - **Generated ERD assessment:** Does the generated ERD have the same columns and order? List changes the **generated ERD** should make to match (e.g. add STATUS column, reorder columns).
+- **Owner/Team column check:** If the engineering ERD includes an Owner or Team column (or attributes deliverables to specific teams in descriptions), check whether the generated ERD does the same. If the engineering ERD has owner attribution and the generated ERD does not, flag this as a missing column in the structure check ledger.
 
 **Content analysis**
 - **Engineering ERD:** How does it analyze/articulate deliverables (e.g. granularity, phrasing, use of Jira/ticket IDs, traceability to PRD/FR, one row per deliverable vs grouped)?
 - **Generated ERD:** How does it compare?
-- **Suggestions for generated ERD:** What could the generated ERD adopt (e.g. same level of granularity, deliverable-naming style, STATUS or acceptance phrasing)?
+- **Capability label accuracy:** Check whether the generated ERD's Capability column values match the PRD-defined capability names. List any mismatches (paraphrased, merged, or invented labels) and note what the correct PRD capability name should be.
+- **Section classification:** Check whether any items in the generated ERD's Functional Deliverables table are **non-functional by nature** (internal monitoring, alerting, reporting, observability, dashboards, audit compliance). If so, flag them as misclassified and recommend moving them to Non-Functional Deliverables.
+- **Suggestions for generated ERD:** What could the generated ERD adopt (e.g. same level of granularity, deliverable-naming style, STATUS or acceptance phrasing, owner attribution)?
 
 ## 5. Non-Functional Engineering Deliverables
 
@@ -210,6 +213,7 @@ Add **2–3 bullets**: interpretation (largest gaps by **numeric** gap, not only
 **Content analysis**
 - **Engineering ERD:** How does it articulate NFRs (e.g. categories, concrete targets vs TBD, linkage to tickets or epics)?
 - **Generated ERD:** How does it compare?
+- **Section classification (reverse check):** Check whether any items in the generated ERD's Non-Functional Deliverables are actually **functional by nature** (new API endpoints, workflow logic, user-facing features). If so, flag them as misclassified and recommend moving to Functional Deliverables. Also check: are there items in the **Functional** section (§4) that should be here instead (monitoring, alerting, reporting, observability, dashboards, audit compliance)? Cross-reference with §4 findings.
 - **Suggestions for generated ERD:** What could the generated ERD adopt (e.g. NFR categorization, level of specificity)?
 
 ## 6. Engineering Epics
@@ -254,9 +258,17 @@ If **N/A** (no comparable System Context in the engineering ERD and no generated
 ## 9. Alignment Recommendations
 
 - **One direction only:** Prioritized list of changes **to the generated ERD** so it matches the **engineering ERD**. Include both:
-  - **Structure:** e.g. "Add STATUS column to Functional Deliverables", "Use same title/version header format as engineering ERD".
+  - **Structure:** e.g. "Add STATUS column to Functional Deliverables", "Add Owner/Team column to match engineering ERD", "Use same title/version header format as engineering ERD".
   - **Content/style:** e.g. "Adopt engineering ERD’s granularity in Functional Deliverables", "Match engineering ERD’s project-by-project breakdown in Monthly Delivery Summary".
+  - **Classification:** e.g. "Move ENG-013 (monitoring) and ENG-014 (dashboards) from Functional to Non-Functional Deliverables", "Fix capability label on ENG-006 to match PRD capability name".
 - Do not recommend that the engineering ERD adopt anything from the generated ERD. Do not suggest new PRD content; content recommendations are about how the generated ERD expresses and analyzes requirements (style, conventions, granularity).
+
+### Standing recommendations (always include when applicable)
+
+These recommendations address common ERD quality gaps that engineering teams consistently flag. Include them when the condition is met, even if the engineering ERD does not explicitly model them:
+
+- **Owner attribution:** If the generated ERD’s Functional Deliverables table has no Owner or Team column, recommend adding one. Engineering teams need to know who is responsible for each deliverable at a glance.
+- **Repository coverage:** If any ENG-XXX describes frontend, UI, banner, dashboard, or client-side work but the ERD (System Context, Dependencies, or deliverable descriptions) declares no frontend/UI repository, flag the mismatch. The evaluator cannot verify which repositories exist, but the absence of a frontend repo alongside UI-scoped deliverables is worth surfacing.
 
 ---
 

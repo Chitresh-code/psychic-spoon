@@ -84,7 +84,7 @@ Use **two columns**: **A = label**, **B = value**. Left-align labels; wrap long 
 
 List **headline metrics only** (percentages or Pass/Fail as appropriate)—one row per line item. Group with **blank row + small caps section title** between groups:
 
-1. **PRD Analysis** (if run): e.g. Structural completeness, PRD coverage, Traceability accuracy, Hallucination rate, Content fidelity, Overall confidence (short text OK in Score column).
+1. **PRD Analysis** (if run): e.g. Structural completeness, PRD coverage, Traceability accuracy, Hallucination rate, Content fidelity, Capability label accuracy, Section classification accuracy, Overall confidence (short text OK in Score column).
 2. **Engineering ERD Comparison** (if run): Structural alignment %, Content alignment %, Combined alignment %, Overall confidence.
 3. **Scoped alignment review** (if run): same three % lines + overall confidence (scoped).
 4. **System Context comparison** (if run): **per-ERD** context–PRD alignment % and relevance % (ERD A vs ERD B), then pair metrics (thematic consistency %, inter-ERD consistency score %, optional mention overlap, overall Step 4 %), each with confidence notes as in the Markdown report.
@@ -100,12 +100,13 @@ One sheet; **vertical sections** separated by **blank rows** and **section heade
 Suggested section order:
 
 1. **Executive summary** — overall result, one-line summary.
-2. **Quantitative metrics** — full table (metric, result, basis, confidence, why) if present in report, including **System Context** rows when evaluated.
+2. **Quantitative metrics** — full table (metric, result, basis, confidence, why) if present in report, including **Capability label accuracy**, **Section classification accuracy**, and **System Context** rows when evaluated.
 3. **Counting basis** — how denominators were defined (optional).
-4. **Completeness gaps**
-5. **Hallucinations / unsourced content**
-6. **Traceability**
-7. **Recommendations**
+4. **Completeness gaps** — including **Misclassified deliverables** sub-table (ERD ID, current section, recommended section, reason) and **Structural recommendations** (owner attribution, repository coverage).
+5. **Capability label audit** — mismatches between ENG-XXX capability labels and PRD-defined capability names.
+6. **Hallucinations / unsourced content**
+7. **Traceability** — including capability label audit summary.
+8. **Recommendations**
 
 **Formatting:** Header row for each table = bold + light gray fill. **Freeze panes** below the first table header row (e.g. row after section title) where useful. Set **column widths** so content is readable (e.g. min 12 for text columns).
 

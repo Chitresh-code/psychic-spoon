@@ -1,4 +1,7 @@
 # Connected apps for AutoSpec Evaluator.
 # Add entries when you connect APIs (reference env vars for secrets, never commit tokens).
+#
+# Teams (optional): OpenAPI spec lives at teams-channel-message.openapi.yaml.
+# Configure OAuth / Bearer in the Custom GPT Actions UI — do not store tokens here.
 
 apps: []
