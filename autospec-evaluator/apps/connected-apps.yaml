@@ -3,5 +3,8 @@
 #
 # Teams (optional): OpenAPI spec lives at teams-channel-message.openapi.yaml.
 # Configure OAuth / Bearer in the Custom GPT Actions UI — do not store tokens here.
+#
+# Power Automate (optional): OpenAPI spec lives at power-automate-report.openapi.json.
+# SAS auth is embedded in the trigger URL — set authentication to None in the GPT Actions UI.
 
 apps: []

@@ -1,0 +1,712 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Power Automate — AutoSpec Evaluation Report",
+    "description": "Submit AutoSpec evaluation report data to a Power Automate flow via its HTTP Request trigger. The agent sends one POST per Excel sheet — shared workbook fields on every request; exactly one sheet-content key is populated per call (matches sheetName). The flow switches on sheetName.",
+    "version": "v1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://default67bff79e7f914433a8e5c9252d2ddc.1d.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/f512f30543d44e2da8bd7e782763f210/triggers/manual/paths",
+      "description": "Power Automate HTTP trigger base URL (path /invoke is appended by this spec). Query parameters api-version, sp, sv, sig use the defaults below."
+    }
+  ],
+  "paths": {
+    "/invoke": {
+      "post": {
+        "summary": "Submit one workbook sheet to Power Automate",
+        "operationId": "submitEvaluationReport",
+        "description": "One sheet per POST: repeat common fields; set sheetName to the Excel tab; populate only the matching key (reportOverview, prdAnalysis, etc.). Omit other content keys. Switch the flow on sheetName.",
+        "parameters": [
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": true,
+            "description": "Power Automate / API version from the trigger URL. Always use the default value.",
+            "schema": {
+              "type": "string",
+              "default": "1"
+            }
+          },
+          {
+            "name": "sp",
+            "in": "query",
+            "required": true,
+            "description": "Shared-access permission. Always use the default value.",
+            "schema": {
+              "type": "string",
+              "default": "%2Ftriggers%2Fmanual%2Frun"
+            }
+          },
+          {
+            "name": "sv",
+            "in": "query",
+            "required": true,
+            "description": "Shared-access version. Always use the default value.",
+            "schema": {
+              "type": "string",
+              "default": "1.0"
+            }
+          },
+          {
+            "name": "sig",
+            "in": "query",
+            "required": true,
+            "description": "SAS signature (sig) from the Power Automate trigger URL. Rotate in this file if the flow URL is regenerated.",
+            "schema": {
+              "type": "string",
+              "default": "MiY8A8vbVJWLw0Mqq4uCgt-wuAW5Lnpjhaugaqebpks"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkbookSheetPayload"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Step data accepted and processed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlowResponse"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Step data accepted for async processing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlowResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+
+      "WorkbookSheetPayload": {
+        "type": "object",
+        "description": "Single request body for all calls. Common workbook fields are required on every POST. sheetName selects which Excel-equivalent sheet is being transmitted; only the matching content key is populated (see xlsx_report_export.md sheet names).",
+        "properties": {
+          "projectName": {
+            "type": "string",
+            "description": "Human-readable project name (PRD product or program name)."
+          },
+          "projectSlug": {
+            "type": "string",
+            "description": "URL-safe slug: lowercase, hyphens."
+          },
+          "reportDate": {
+            "type": "string",
+            "format": "date",
+            "description": "YYYY-MM-DD."
+          },
+          "prdFilename": {
+            "type": "string",
+            "description": "PRD document filename or display string."
+          },
+          "generatedErdFilename": {
+            "type": "string",
+            "description": "Generated ERD filename."
+          },
+          "engineeringErdFilename": {
+            "type": "string",
+            "description": "Engineering / reference ERD filename; empty string \"\" when not evaluated."
+          },
+          "engineeringErdDisplay": {
+            "type": "string",
+            "description": "Excel Sheet 1 label value: filename or \"Not evaluated\"."
+          },
+          "workbookTitle": {
+            "type": "string",
+            "description": "Visible report title: \"{Project Name} Evaluation Report\" per xlsx_report_export.md."
+          },
+          "evaluationsIncludedLabels": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "User-facing phase names included in this export (not \"Step N\"), e.g. PRD Analysis; Engineering ERD Comparison."
+          },
+          "completedSteps": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Internal step labels completed, e.g. Step 1, Step 2."
+          },
+          "overallResult": {
+            "type": "string",
+            "enum": ["Pass", "Pass with gaps", "Fail"],
+            "description": "Report-level overall result (typically from PRD Analysis)."
+          },
+          "overallConfidence": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High"],
+            "description": "Report-level overall confidence."
+          },
+          "sheetName": {
+            "type": "string",
+            "enum": [
+              "Report_Overview",
+              "PRD_Analysis",
+              "Eng_ERD_Comparison",
+              "Scoped_Alignment",
+              "System_Context_Comp",
+              "Recommendations"
+            ],
+            "description": "Which sheet this POST corresponds to. Flow: Switch(sheetName). Must populate only the content key that matches this value."
+          },
+          "reportOverview": {
+            "description": "When sheetName is Report_Overview. Omit for other sheets.",
+            "allOf": [{ "$ref": "#/components/schemas/ReportOverview" }]
+          },
+          "prdAnalysis": {
+            "description": "When sheetName is PRD_Analysis. Omit for other sheets.",
+            "allOf": [{ "$ref": "#/components/schemas/PrdAnalysis" }]
+          },
+          "engineeringErdComparison": {
+            "description": "When sheetName is Eng_ERD_Comparison. Omit for other sheets.",
+            "allOf": [{ "$ref": "#/components/schemas/EngineeringErdComparison" }]
+          },
+          "scopedAlignmentReview": {
+            "description": "When sheetName is Scoped_Alignment. Omit for other sheets.",
+            "allOf": [{ "$ref": "#/components/schemas/ScopedAlignmentReview" }]
+          },
+          "systemContextComparison": {
+            "description": "When sheetName is System_Context_Comp. Omit for other sheets.",
+            "allOf": [{ "$ref": "#/components/schemas/SystemContextComparison" }]
+          },
+          "recommendations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Recommendation"
+            },
+            "description": "When sheetName is Recommendations (consolidated list). Omit or null otherwise."
+          }
+        },
+        "required": [
+          "projectName",
+          "projectSlug",
+          "reportDate",
+          "prdFilename",
+          "generatedErdFilename",
+          "engineeringErdFilename",
+          "workbookTitle",
+          "sheetName"
+        ]
+      },
+
+      "ReportOverview": {
+        "type": "object",
+        "description": "Excel sheet Report_Overview — section B \"Score summary\" (headline Metric | Score rows). Document metadata lives on the payload root (filenames, workbookTitle, evaluationsIncludedLabels).",
+        "properties": {
+          "overviewScoreSummary": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/OverviewScoreSummaryRow" },
+            "description": "Flattened headline scores for completed phases; same rows as xlsx_report_export.md Sheet 1 score summary. Use empty array [] if not yet available."
+          }
+        },
+        "required": ["overviewScoreSummary"]
+      },
+
+      "OverviewScoreSummaryRow": {
+        "type": "object",
+        "description": "One row of the Excel Report_Overview \"Score summary\" table (Metric | Score), grouped by phase per xlsx_report_export.md.",
+        "properties": {
+          "phase": {
+            "type": "string",
+            "description": "User-facing phase name: PRD Analysis, Engineering ERD Comparison, Scoped alignment review, or System Context comparison. Repeat phase value on consecutive rows for that group (same pattern as blank-row section groups in Excel)."
+          },
+          "metric": {
+            "type": "string",
+            "description": "Headline metric label (e.g. Structural completeness, Structural alignment %)."
+          },
+          "score": {
+            "type": "string",
+            "description": "Value as in the Excel Score column: percentage, Pass/Fail, qualitative label, or short text including confidence where the Markdown report does so."
+          }
+        },
+        "required": ["phase", "metric", "score"]
+      },
+
+      "MetricRow": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "resultPercent": {
+            "type": "number",
+            "description": "0–100 or -1 when N/A."
+          },
+          "basis": {
+            "type": "string",
+            "description": "Short numerator/denominator (e.g. '27/32 items')."
+          },
+          "confidence": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High"]
+          },
+          "why": {
+            "type": "string",
+            "description": "One short phrase."
+          }
+        },
+        "required": ["name", "resultPercent", "basis", "confidence", "why"]
+      },
+
+      "PrdAnalysis": {
+        "type": "object",
+        "description": "Step 1 — PRD vs generated ERD. Divided into sub-objects so no single field is large.",
+        "properties": {
+          "summary": {
+            "$ref": "#/components/schemas/Step1Summary"
+          },
+          "metrics": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/MetricRow" },
+            "description": "All Step 1 quantitative metrics (7–11 rows including System Context when applicable)."
+          },
+          "countingBasis": {
+            "$ref": "#/components/schemas/CountingBasis"
+          },
+          "completenessGaps": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CompletenessGap" }
+          },
+          "misclassifiedDeliverables": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/MisclassifiedDeliverable" }
+          },
+          "capabilityLabelMismatches": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CapabilityMismatch" }
+          },
+          "hallucinations": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/HallucinationItem" }
+          },
+          "traceability": {
+            "$ref": "#/components/schemas/Traceability"
+          },
+          "structuralFlags": {
+            "$ref": "#/components/schemas/StructuralFlags"
+          }
+        },
+        "required": [
+          "summary",
+          "metrics",
+          "countingBasis",
+          "completenessGaps",
+          "misclassifiedDeliverables",
+          "capabilityLabelMismatches",
+          "hallucinations",
+          "traceability",
+          "structuralFlags"
+        ]
+      },
+
+      "Step1Summary": {
+        "type": "object",
+        "properties": {
+          "overallResult": {
+            "type": "string",
+            "enum": ["Pass", "Pass with gaps", "Fail"]
+          },
+          "oneLiner": {
+            "type": "string",
+            "description": "One-line summary (max 200 chars)."
+          },
+          "overallConfidence": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High"]
+          },
+          "confidenceRationale": {
+            "type": "string",
+            "description": "One sentence (max 200 chars)."
+          }
+        },
+        "required": ["overallResult", "oneLiner", "overallConfidence", "confidenceRationale"]
+      },
+
+      "CountingBasis": {
+        "type": "object",
+        "properties": {
+          "prdItemRule": { "type": "string", "description": "Max 150 chars." },
+          "substantiveElementRule": { "type": "string", "description": "Max 150 chars." },
+          "traceLinkRule": { "type": "string", "description": "Max 150 chars." }
+        },
+        "required": ["prdItemRule", "substantiveElementRule", "traceLinkRule"]
+      },
+
+      "CompletenessGap": {
+        "type": "object",
+        "properties": {
+          "prdReference": { "type": "string" },
+          "description": { "type": "string", "description": "Max 200 chars." },
+          "suggestedErdLocation": { "type": "string" }
+        },
+        "required": ["prdReference", "description", "suggestedErdLocation"]
+      },
+
+      "MisclassifiedDeliverable": {
+        "type": "object",
+        "properties": {
+          "erdId": { "type": "string" },
+          "currentSection": { "type": "string" },
+          "recommendedSection": { "type": "string" },
+          "reason": { "type": "string", "description": "Max 150 chars." }
+        },
+        "required": ["erdId", "currentSection", "recommendedSection", "reason"]
+      },
+
+      "CapabilityMismatch": {
+        "type": "object",
+        "properties": {
+          "engId": { "type": "string" },
+          "currentLabel": { "type": "string" },
+          "correctPrdCapability": { "type": "string" },
+          "issue": { "type": "string", "description": "Max 100 chars." }
+        },
+        "required": ["engId", "currentLabel", "correctPrdCapability", "issue"]
+      },
+
+      "HallucinationItem": {
+        "type": "object",
+        "properties": {
+          "erdLocation": { "type": "string" },
+          "content": { "type": "string", "description": "Max 200 chars." },
+          "reason": { "type": "string", "description": "Max 150 chars." }
+        },
+        "required": ["erdLocation", "content", "reason"]
+      },
+
+      "Traceability": {
+        "type": "object",
+        "properties": {
+          "totalLinks": { "type": "integer" },
+          "correctLinks": { "type": "integer" },
+          "accuracyPercent": { "type": "number" },
+          "brokenLinks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "erdId": { "type": "string" },
+                "issue": { "type": "string", "description": "Max 150 chars." }
+              },
+              "required": ["erdId", "issue"]
+            }
+          },
+          "milestoneViolations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "erdId": { "type": "string" },
+                "found": { "type": "string" },
+                "expected": { "type": "string" }
+              },
+              "required": ["erdId", "found", "expected"]
+            }
+          }
+        },
+        "required": ["totalLinks", "correctLinks", "accuracyPercent", "brokenLinks", "milestoneViolations"]
+      },
+
+      "StructuralFlags": {
+        "type": "object",
+        "properties": {
+          "ownerAttributionMissing": { "type": "boolean" },
+          "repositoryCoverageGap": { "type": "boolean" },
+          "details": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Short detail strings (max 150 chars each)."
+          }
+        },
+        "required": ["ownerAttributionMissing", "repositoryCoverageGap", "details"]
+      },
+
+      "EngineeringErdComparison": {
+        "type": "object",
+        "description": "Step 2 — Generated vs engineering ERD. Section scores and ledgers sent as flat arrays.",
+        "properties": {
+          "summary": {
+            "$ref": "#/components/schemas/Step2Summary"
+          },
+          "headlineMetrics": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/MetricRow" },
+            "description": "Three rows: Structural alignment, Content alignment, Combined."
+          },
+          "sectionScores": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SectionScore" },
+            "description": "One row per canonical section (6 or 7)."
+          },
+          "structureChecks": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/StructureCheck" },
+            "description": "Flat array of all structure checks across all sections. Each row carries its section name."
+          },
+          "contentFacets": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ContentFacet" },
+            "description": "Flat array of all content facets across all sections. Each row carries its section name."
+          }
+        },
+        "required": ["summary", "headlineMetrics", "sectionScores", "structureChecks", "contentFacets"]
+      },
+
+      "Step2Summary": {
+        "type": "object",
+        "properties": {
+          "overallStructureMatch": {
+            "type": "string",
+            "enum": ["Aligned", "Partial", "Not aligned"]
+          },
+          "oneLiner": { "type": "string" },
+          "contentAnalysisSummary": { "type": "string", "description": "2–3 lines, max 400 chars." },
+          "overallConfidence": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High"]
+          },
+          "confidenceRationale": { "type": "string" },
+          "scopeAssessment": {
+            "type": "string",
+            "enum": ["full-program", "subset"]
+          },
+          "scopeNote": { "type": "string", "description": "Max 200 chars." }
+        },
+        "required": ["overallStructureMatch", "oneLiner", "overallConfidence", "confidenceRationale", "scopeAssessment", "scopeNote"]
+      },
+
+      "SectionScore": {
+        "type": "object",
+        "properties": {
+          "section": {
+            "type": "string",
+            "enum": [
+              "Document Metadata",
+              "Monthly Delivery Summary",
+              "Functional Engineering Deliverables",
+              "Non-Functional Engineering Deliverables",
+              "Engineering Epics",
+              "E2E Testing Plan",
+              "System Context"
+            ]
+          },
+          "structurePercent": { "type": "number", "description": "-1 for N/A." },
+          "structureBasis": { "type": "string", "description": "e.g. '8/9'." },
+          "contentPercent": { "type": "number", "description": "-1 for N/A." },
+          "contentBasis": { "type": "string", "description": "e.g. '4.0/5'." },
+          "band": {
+            "type": "string",
+            "enum": ["Match", "Partial", "Does not match", "N/A"]
+          }
+        },
+        "required": ["section", "structurePercent", "structureBasis", "contentPercent", "contentBasis", "band"]
+      },
+
+      "StructureCheck": {
+        "type": "object",
+        "description": "One structure check row. Flat — carries its own section name.",
+        "properties": {
+          "section": { "type": "string" },
+          "checkNumber": { "type": "integer" },
+          "check": { "type": "string", "description": "Max 120 chars." },
+          "reference": { "type": "string", "description": "Fact from engineering ERD. Max 150 chars." },
+          "generated": { "type": "string", "description": "Fact from generated ERD. Max 150 chars." },
+          "pass": { "type": "boolean" }
+        },
+        "required": ["section", "checkNumber", "check", "reference", "generated", "pass"]
+      },
+
+      "ContentFacet": {
+        "type": "object",
+        "description": "One content facet row. Flat — carries its own section name.",
+        "properties": {
+          "section": { "type": "string" },
+          "facet": { "type": "string" },
+          "score": { "type": "number", "enum": [0, 0.5, 1] },
+          "rationale": { "type": "string", "description": "One sentence. Max 150 chars." }
+        },
+        "required": ["section", "facet", "score", "rationale"]
+      },
+
+      "ScopedAlignmentReview": {
+        "type": "object",
+        "description": "Step 3 — Scope-aligned comparison. Same structure as Step 2 but scoped.",
+        "properties": {
+          "declaredScope": {
+            "$ref": "#/components/schemas/DeclaredScope"
+          },
+          "summary": {
+            "type": "object",
+            "properties": {
+              "overallConfidence": {
+                "type": "string",
+                "enum": ["Low", "Medium", "High"]
+              },
+              "confidenceRationale": { "type": "string" }
+            },
+            "required": ["overallConfidence", "confidenceRationale"]
+          },
+          "headlineMetrics": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/MetricRow" },
+            "description": "Three rows: Structural (scoped), Content (scoped), Combined (scoped)."
+          },
+          "sectionScores": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/SectionScore" }
+          },
+          "structureChecks": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/StructureCheck" }
+          },
+          "contentFacets": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ContentFacet" }
+          },
+          "scopeFairnessNote": {
+            "type": "string",
+            "description": "Step 2 vs Step 3 delta explanation. Max 250 chars."
+          }
+        },
+        "required": ["declaredScope", "summary", "headlineMetrics", "sectionScores", "structureChecks", "contentFacets", "scopeFairnessNote"]
+      },
+
+      "DeclaredScope": {
+        "type": "object",
+        "properties": {
+          "engineeringErdScope": { "type": "string", "description": "Max 200 chars." },
+          "howInferred": { "type": "string", "description": "Max 250 chars." },
+          "generatedErdSlice": { "type": "string", "description": "Max 200 chars." }
+        },
+        "required": ["engineeringErdScope", "howInferred", "generatedErdSlice"]
+      },
+
+      "SystemContextComparison": {
+        "type": "object",
+        "description": "Step 4 — System Context comparison between two ERDs.",
+        "properties": {
+          "summary": {
+            "$ref": "#/components/schemas/Step4Summary"
+          },
+          "perErdMetrics": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PerErdMetricRow" },
+            "description": "Table A — per-ERD metrics (2–4 rows)."
+          },
+          "crossErdMetrics": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/CrossErdMetricRow" },
+            "description": "Table B — pair-level metrics (4–5 rows)."
+          },
+          "contradictions": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Contradiction" }
+          },
+          "mentionOverlap": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/MentionOverlapItem" },
+            "description": "Optional. Document-only mention overlap."
+          }
+        },
+        "required": ["summary", "perErdMetrics", "crossErdMetrics", "contradictions"]
+      },
+
+      "Step4Summary": {
+        "type": "object",
+        "properties": {
+          "erdALabel": { "type": "string" },
+          "erdBLabel": { "type": "string" },
+          "option": { "type": "string", "enum": ["A", "B"] },
+          "prdUsed": { "type": "string" },
+          "overallConfidence": {
+            "type": "string",
+            "enum": ["Low", "Medium", "High"]
+          },
+          "confidenceRationale": { "type": "string" }
+        },
+        "required": ["erdALabel", "erdBLabel", "option", "prdUsed", "overallConfidence", "confidenceRationale"]
+      },
+
+      "PerErdMetricRow": {
+        "type": "object",
+        "properties": {
+          "metric": { "type": "string" },
+          "erdAPercent": { "type": "number", "description": "-1 for N/A." },
+          "erdBPercent": { "type": "number", "description": "-1 for N/A." },
+          "confidence": { "type": "string", "enum": ["Low", "Medium", "High"] },
+          "howObtained": { "type": "string", "description": "Max 150 chars." },
+          "why": { "type": "string", "description": "Max 100 chars." }
+        },
+        "required": ["metric", "erdAPercent", "erdBPercent", "confidence", "howObtained", "why"]
+      },
+
+      "CrossErdMetricRow": {
+        "type": "object",
+        "properties": {
+          "metric": { "type": "string" },
+          "result": { "type": "string", "description": "Percentage string or qualitative label." },
+          "confidence": { "type": "string", "enum": ["Low", "Medium", "High"] },
+          "howObtained": { "type": "string", "description": "Max 150 chars." },
+          "why": { "type": "string", "description": "Max 100 chars." }
+        },
+        "required": ["metric", "result", "confidence", "howObtained", "why"]
+      },
+
+      "Contradiction": {
+        "type": "object",
+        "properties": {
+          "claimInA": { "type": "string", "description": "Max 200 chars." },
+          "claimInB": { "type": "string", "description": "Max 200 chars." },
+          "note": { "type": "string", "description": "Max 150 chars." }
+        },
+        "required": ["claimInA", "claimInB", "note"]
+      },
+
+      "MentionOverlapItem": {
+        "type": "object",
+        "properties": {
+          "item": { "type": "string" },
+          "inA": { "type": "boolean" },
+          "inB": { "type": "boolean" }
+        },
+        "required": ["item", "inA", "inB"]
+      },
+
+      "Recommendation": {
+        "type": "object",
+        "properties": {
+          "number": { "type": "integer", "minimum": 1 },
+          "recommendation": { "type": "string", "description": "Max 250 chars." },
+          "priority": { "type": "string", "enum": ["High", "Medium", "Low"] },
+          "sourceStep": { "type": "string" }
+        },
+        "required": ["number", "recommendation", "priority", "sourceStep"]
+      },
+
+      "FlowResponse": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string" },
+          "message": { "type": "string" },
+          "runId": { "type": "string" }
+        },
+        "required": ["status", "message"]
+      }
+    }
+  }
+}

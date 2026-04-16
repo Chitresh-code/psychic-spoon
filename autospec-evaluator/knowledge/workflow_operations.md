@@ -23,7 +23,8 @@ Use these templates (paraphrase the em-dash text if needed; **keep the bold cues
 
 - **Generate report** — Produce the Excel workbook with **PRD Analysis** only (evaluations completed so far) for **manual download** in the chat. Say **generate report**, **Excel export**, or **download xlsx**.
 - **Send to Teams** — Post an **HTML summary** of this step’s report to the configured Teams channel via **`sendChannelMessage`** (see **`teams_channel_message.md`**). Say **send to Teams**, **post to Teams**, or **Teams**. *Only if the Teams action is connected; otherwise omit this bullet.*
-- **Share your team's ERD** — Upload your engineering/reference ERD (**DOCX** or **Markdown**) to start **Step 2** (Engineering ERD comparison). Say **share your team's ERD**, **Step 2**, or upload the file.
+- **Send to Power Automate** — Submit the report data as **structured JSON** to the connected Power Automate flow via **`submitEvaluationReport`** (see **`power_automate_report.md`**). Say **send to Power Automate**, **submit to flow**, or **push report**. *Only if the Power Automate action is connected; otherwise omit this bullet.*
+- **Share your team’s ERD** — Upload your engineering/reference ERD (**DOCX** or **Markdown**) to start **Step 2** (Engineering ERD comparison). Say **share your team’s ERD**, **Step 2**, or upload the file.
 
 ### After Step 2 (Engineering ERD comparison complete)
 
@@ -31,6 +32,7 @@ Always include both bullets below. If the engineering ERD looks **subset-scoped*
 
 - **Generate report** — Produce the Excel workbook including **PRD Analysis** and **Engineering ERD Comparison** (all evaluations so far) for **manual download**. Say **generate report**, **Excel export**, or **download xlsx**.
 - **Send to Teams** — Post an **HTML summary** of the report so far (include Step 2 highlights) via **`sendChannelMessage`**. Say **send to Teams**, **post to Teams**, or **Teams**. *Only if the Teams action is connected; otherwise omit.*
+- **Send to Power Automate** — Submit Steps 1–2 data as **structured JSON** to the connected flow via **`submitEvaluationReport`**. Say **send to Power Automate**, **submit to flow**, or **push report**. *Only if the Power Automate action is connected; otherwise omit.*
 - **Step 3** — Run **scope-aligned analysis** (compare only the overlap if the engineering ERD covers a slice of the PRD). Say **Step 3**, **scope-aligned**, or **yes** to Step 3.
 
 If the engineering ERD looks **full-program**, you may add after the bullets one line: *Step 3 is optional—use it only if you want a scoped comparison anyway.*
@@ -39,19 +41,22 @@ If the engineering ERD looks **full-program**, you may add after the bullets one
 
 - **Generate report** — Produce the Excel workbook with **PRD Analysis**, **Engineering ERD Comparison**, and **Scoped alignment review** (all evaluations completed so far) for **manual download**. Say **generate report**, **Excel export**, or **download xlsx**.
 - **Send to Teams** — Post an **HTML summary** (include scoped alignment highlights) via **`sendChannelMessage`**. Say **send to Teams**, **post to Teams**, or **Teams**. *Only if the Teams action is connected; otherwise omit.*
+- **Send to Power Automate** — Submit Steps 1–3 data as **structured JSON** via **`submitEvaluationReport`**. Say **send to Power Automate**, **submit to flow**, or **push report**. *Only if the Power Automate action is connected; otherwise omit.*
 - **Step 4** — Run **System Context comparison** only (two ERDs: engineering ERD from Step 2 and/or another **DOCX/Markdown** ERD you upload). Say **Step 4**, **System Context comparison**, or **compare context**.
 
 ### After Step 4 (System Context comparison complete)
 
 - **Generate report** — Produce the full Excel workbook including **System Context comparison** and every other completed phase for **manual download**. Say **generate report**, **Excel export**, or **download xlsx**.
 - **Send to Teams** — Post an **HTML summary** of the full evaluation (including Step 4 context comparison) via **`sendChannelMessage`**. Say **send to Teams**, **post to Teams**, or **Teams**. *Only if the Teams action is connected; otherwise omit.*
+- **Send to Power Automate** — Submit the full evaluation (Steps 1–4) as **structured JSON** via **`submitEvaluationReport`**. Say **send to Power Automate**, **submit to flow**, or **push report**. *Only if the Power Automate action is connected; otherwise omit.*
 
 ### After delivering an Excel file (same session)
 
 The workbook is **only** available as a **download in this chat**; the user saves it locally.
 
 - **Teams connected:** If they ask to **send the report to Teams** or **notify the channel**, use **`sendChannelMessage`** per **`teams_channel_message.md`**: post an **HTML summary** (metrics, top gaps, note that the **Excel file was generated in this chat** and is not attached to Teams). Do **not** claim the binary was uploaded to Teams unless a separate integration exists.
-- **Teams not connected:** If they ask to push the workbook to email, cloud storage, **Teams**, or other tools **without** a connected action, say that **only in-chat download** is supported and they can upload or forward the saved file themselves.
+- **Power Automate connected:** If they ask to **send to Power Automate** or **push report**, use **`submitEvaluationReport`** per **`power_automate_report.md`**: one POST per sheet (`sheetName` + common fields + one populated content key). Do **not** claim the Excel binary was sent — only JSON is transmitted.
+- **Neither connected:** If they ask to push the workbook to email, cloud storage, **Teams**, **Power Automate**, or other tools **without** a connected action, say that **only in-chat download** is supported and they can upload or forward the saved file themselves.
 
 If the user has **only** completed Step 1 and just received a workbook, offer a minimal follow-up list if they have not started Step 2:
 
