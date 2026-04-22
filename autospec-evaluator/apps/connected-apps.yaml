@@ -1,10 +1,6 @@
 # Connected apps for AutoSpec Evaluator.
 # Add entries when you connect APIs (reference env vars for secrets, never commit tokens).
 #
-# Teams (optional): OpenAPI spec lives at teams-channel-message.openapi.yaml.
-# Configure OAuth / Bearer in the Custom GPT Actions UI — do not store tokens here.
-#
-# Power Automate (optional): OpenAPI spec lives at power-automate-report.openapi.json.
-# SAS auth is embedded in the trigger URL — set authentication to None in the GPT Actions UI.
+# SharePoint via Power Automate (optional): power-automate-report.openapi.json — import as-is; align server + query defaults in the GPT Actions UI with the live trigger (SAS via sig, no Bearer token in app).
 
 apps: []

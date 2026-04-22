@@ -13,9 +13,9 @@
 
 1. Create a custom GPT.
 2. Paste **`prompt.md`** into **Instructions**.
-3. Add **Knowledge**: upload the schema/ops `.md` files in **`knowledge/`** (`workflow_operations.md`, `evaluation_report_schema.md`, `structure_analysis_schema.md`, `scope_aligned_comparison_schema.md`, `system_context_schema.md`, `xlsx_report_export.md`). If you connect **Microsoft Teams** (below), also upload **`teams_channel_message.md`**. `knowledge/README.md` is optional.
+3. Add **Knowledge**: upload the schema/ops `.md` files in **`knowledge/`** (`workflow_operations.md`, `evaluation_report_schema.md`, `structure_analysis_schema.md`, `scope_aligned_comparison_schema.md`, `system_context_schema.md`, `xlsx_report_export.md`). If you connect **SharePoint via Power Automate** (below), also upload **`power_automate_report.md`**. `knowledge/README.md` is optional.
 4. Enable **Code interpreter & data analysis** and **Canvas** (optional).
-5. **Optional — Teams:** In **Actions**, import **`apps/teams-channel-message.openapi.yaml`** (or paste your equivalent OpenAPI). Set **Authentication** to OAuth 2.0 / Bearer for Microsoft Graph; grant permissions your tenant allows for posting to the target channel. Update **`teamId`** / **`channelId`** defaults in the schema if the channel changes. Then upload **`teams_channel_message.md`** as Knowledge so the model formats messages correctly.
+5. **Optional — SharePoint (Power Automate HTTP trigger):** In **Actions**, import **`apps/power-automate-report.openapi.json`** (the working **Power Automate** definition—keep it aligned with your flow in **ChatGPT** or in a branch; do not fork the JSON casually in-repo). In the **Actions** UI, set the **base URL** and **query** defaults so they match your real **HTTP request** trigger (`api-version`, `sp`, `sv`, `sig` as the platform provides). Set authentication to **None** if you use **SAS** in `sig` per the spec. Upload **`power_automate_report.md`** as Knowledge so the model uses **`WorkbookSheetPayload` only** in the **body** (never invented query values in JSON) and **retries with a valid `api-version`** when the error response provides one.
 
 ## Repo mirror
 

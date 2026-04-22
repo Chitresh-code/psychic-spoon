@@ -1,6 +1,24 @@
-# Power Automate — send evaluation report as JSON (Custom GPT Action)
+# SharePoint — upload evaluation report (Power Automate HTTP trigger)
 
-Use this when the **Power Automate Report** OpenAPI action (`submitEvaluationReport`) is connected and the user asks to **send the report to Power Automate**, **submit to flow**, **push report**, or similar.
+Use this when the **SharePoint report upload** action (`submitEvaluationReport`) is connected and the user asks to **upload the report to SharePoint**, **push the evaluation to SharePoint**, **send the report to SharePoint**, or similar. The **Power Automate** OpenAPI spec (`power-automate-report.openapi.json`) is the source of truth: it defines the path, **query** parameters, and the JSON **body** schema. The flow (e.g. create or update **SharePoint** list items) receives **`WorkbookSheetPayload`** in the request body.
+
+## JSON body: `WorkbookSheetPayload` only
+
+- The **body** of each call is **only** the object defined as **`WorkbookSheetPayload`** in the OpenAPI file—no extra top-level properties.
+- **Never** put trigger **query** parameters in the JSON body: not `api-version`, `sp`, `sv`, or `sig`, and not placeholders (e.g. `connected-action`, `sig: "1"`). Those belong in the **HTTP request** as defined by the action (query string), not inside the body.
+
+## Query parameters: use the OpenAPI action—do not invent values
+
+- **`submitEvaluationReport`** is defined in `power-automate-report.openapi.json` with **query** parameters (`api-version`, `sp`, `sv`, `sig`, etc.) as the platform expects. When calling the **connector / action**, supply **only** the values the OpenAPI spec and the Custom GPT **Actions** UI expose (defaults from a correct import match your working Power Automate trigger URL).
+- **Do not** guess or invent `sig` or any other query value. If the UI shows fixed defaults from the spec, use those. Do not substitute narrative text or made-up tokens for `sig`.
+- **Do not** merge the whole trigger URL or its query into the request **body** as key-value fields.
+
+## If the call fails: `api-version` (and retriable parameters)
+
+- When the service responds with an error that **lists supported or valid** `api-version` values (or a clear message that the `api-version` is wrong), **read that response** and call **`submitEvaluationReport` again** with:
+  - the **same** `WorkbookSheetPayload` body (unchanged), and
+  - the **query** parameters updated to use a **`api-version` value** from the error message (or the single value it recommends), leaving **`sp`**, **`sv`**, and **`sig`** as specified by the working OpenAPI import unless the response says otherwise.
+- If the error does not mention `api-version` (e.g. network timeout, 401, invalid `sig`), do **not** fabricate a new `api-version`—report the error, offer a **manual retry** after the user or admin confirms the trigger URL and action configuration.
 
 ---
 
@@ -27,7 +45,7 @@ Every POST uses the same **`WorkbookSheetPayload`** body:
 
 ## When to call the action
 
-- After the user asks to send data to Power Automate, send **one POST per sheet** that exists for the completed evaluations.
+- After the user asks to upload to SharePoint (or push the report through the flow), send **one POST per sheet** that exists for the completed evaluations.
 - **Skip sheets** for phases that did not run (e.g. no `System_Context_Comp` if Step 4 did not run).
 
 ## Recommended send order
@@ -69,7 +87,7 @@ Use the **same** `projectSlug` and `reportDate` on every call in one session.
 2. **Keep individual field values short.** Descriptions ≤ 200 characters. Rationales and reasons ≤ 150 characters. Summaries ≤ 400 characters. If a finding is longer, split across the `description` and `reason` fields or truncate the detail (the full report lives in the Markdown; JSON is structured data, not prose).
 3. **Use -1 for N/A percentages.** When a metric is not applicable, set `resultPercent`, `structurePercent`, `contentPercent`, `erdAPercent`, or `erdBPercent` to **-1** (not null, not an empty string). Add `"N/A"` in the `basis` or `why` field with a short reason.
 4. **Empty arrays for clean findings.** When there are no gaps, no hallucinations, no misclassifications, etc., send an **empty array** `[]` — not null, not a missing key.
-5. **No HTML.** All values are plain text. No inline styles, no tags. HTML is for the Teams action only.
+5. **No HTML.** All values are plain text. No inline styles, no tags.
 6. **No chat-session references.** Do not mention ChatGPT, the conversation, tool failures, or export issues in any field value.
 
 ---
@@ -267,23 +285,20 @@ The flow receives each POST on the same HTTP trigger. Recommended design:
    - `Eng_ERD_Comparison` — store Step 2 data.
    - `Scoped_Alignment` — store Step 3 data.
    - `System_Context_Comp` — store Step 4 data.
-   - `Recommendations` — store recommendations; optionally send Teams notification or email summary.
+   - `Recommendations` — store recommendations; optionally email summary or other notifications per your design.
 3. **Response:** Return `{"status": "accepted", "message": "Sheet received"}` with HTTP 200.
 
-### SAS authentication
+### Custom GPT / operator setup (do not edit the OpenAPI in-repo)
 
-The trigger URL includes a `sig` query parameter (SAS token). No separate OAuth or Bearer token is needed. In the Custom GPT Actions UI:
-- Import `power-automate-report.openapi.json`.
-- Update the **server URL** with your flow's trigger base URL.
-- Update the **`sig` default value** with your flow's SAS signature.
-- Set authentication to **None** (SAS is in the URL).
+- Import **`power-automate-report.openapi.json`** in **Actions** as provided (working Power Automate spec). The human operator ensures **server base URL** and **action** defaults match the real **HTTP request** trigger from Power Platform.
+- **SAS / `sig`:** No Bearer token; `sig` is a query parameter in the spec. The agent only invokes the **published action**—it does not rewrite the spec file in the repository.
 
 ---
 
 ## After a successful submission
 
-Confirm to the user in chat: data for **{sheet name}** was sent to Power Automate. If sending multiple sheets, confirm after each call completes (or summarize).
+Confirm to the user in chat: data for **{sheet name}** was **submitted to the flow** (for SharePoint storage per the flow). If sending multiple sheets, confirm after each call completes (or summarize).
 
-If a call fails (timeout, 4xx, 5xx): state the error briefly and offer to **retry**. Do not retry automatically — the user may need to check the flow or trigger URL.
+If a call fails: state the error briefly. **If** the response includes **valid `api-version` values** (or equivalent), call **`submitEvaluationReport` again** with the same **`WorkbookSheetPayload`** and the **corrected `api-version`** from the response (per **If the call fails** above). For other errors, offer a **user-driven retry** after they confirm the flow; do not invent query parameters.
 
 Then show the **What would you like to do next?** options from `workflow_operations.md` if still relevant.
