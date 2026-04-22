@@ -104,7 +104,7 @@ Suggested section order:
 3. **Counting basis** — how denominators were defined (optional).
 4. **Completeness gaps** — including **Misclassified deliverables** sub-table (ERD ID, current section, recommended section, reason) and **Structural recommendations** (owner attribution, repository coverage).
 5. **Capability label audit** — mismatches between ENG-XXX capability labels and PRD-defined capability names.
-6. **Hallucinations / unsourced content**
+6. **Hallucinations / unsourced content** — list **true hallucinations only** (per `evaluation_report_schema.md` **§4a**): not in the PRD and not substantively sourced from System Context. **Do not** include **§4b** (*Traced to System Context, not in PRD*) in the workbook; that material may appear in the **Markdown** report only.
 7. **Traceability** — including capability label audit summary.
 8. **Recommendations**
 

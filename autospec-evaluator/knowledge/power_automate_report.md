@@ -167,7 +167,7 @@ One object per row in §5 Capability label audit table. Empty array if all match
 
 ### `hallucinations`
 
-One object per row in §4 Hallucination / Unsourced Content table. Empty array if none.
+One object per **§4a** row only (true hallucinations). **Omit** §4b (*Traced to System Context, not in PRD*); the flow does not carry those. Empty array if none.
 
 ### `traceability`
 

@@ -5,7 +5,7 @@ Preload **all** of these in your Custom GPT **Knowledge** so **Instructions** (`
 | File | Used in |
 |------|---------|
 | `workflow_operations.md` | Step-by-step rules: **DOCX or Markdown** inputs, hallucination vs IDs, Step 2 reference stance, **capability label accuracy**, **section classification**, **standing recommendations** (owner attribution, repo coverage), **explicit next-step option lists** after Steps 1–4, Excel + closings, **SharePoint upload** (optional) |
-| `evaluation_report_schema.md` | Step 1 – PRD vs generated ERD evaluation report (quantitative metrics incl. **capability label accuracy** and **section classification accuracy**, completeness with **misclassified deliverables** and **structural recommendations**, traceability with **capability label audit**) |
+| `evaluation_report_schema.md` | Step 1 – PRD vs generated ERD evaluation report; **hallucination triage** (§4a/§4b, rate); Excel/flow: **§4a only**; **capability label** + **section classification**; **structural recommendations**; **capability label audit** |
 | `system_context_schema.md` | **System Context** block (Steps 1–3) and **Step 4** (two-ERD context comparison); no live GitHub/Confluence verification |
 | `structure_analysis_schema.md` | Step 2 – structure + content alignment (seven sections when System Context applies); check ledger + facet ledger in §2–§8; **capability label accuracy** in §4, **section classification** cross-check in §4/§5, **standing recommendations** in §9 |
 | `scope_aligned_comparison_schema.md` | Step 3 – scoped comparison; same metric model as Step 2, scoped; System Context when in slice; **capability labels and section classification** still strict in slice |

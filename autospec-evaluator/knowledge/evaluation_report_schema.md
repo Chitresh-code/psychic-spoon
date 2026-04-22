@@ -24,8 +24,8 @@ All percentages are **0–100** (one decimal place is enough). State **numerator
 | **Structural completeness** | How fully the generated ERD implements the **canonical ERD shape** (sections present, in sensible order, populated enough to be usable). | Use the same **seven** areas as Step 2 when System Context is present: Document Metadata, Monthly Delivery Summary, Functional Engineering Deliverables, Non-Functional Engineering Deliverables, Engineering Epics, E2E Testing Plan, **System Context**. If the generated ERD has **no** System Context block, use **six** areas only (same formula with divisor 6) and state that System Context was absent. Per area: **1.0** = present and appropriately structured; **0.5** = present but wrong format, wrong table shape, or clearly incomplete; **0** = missing or not identifiable. **Structural completeness %** = (sum of scores / N) × 100 where N is 6 or 7. **Detail:** See `system_context_schema.md` for System Context shape checks. |
 | **PRD coverage** | Share of PRD-trackable scope reflected in the ERD. | Build a **denominator**: count discrete PRD items you treat as in-scope (capabilities, functional requirements, explicit deliverables, and other explicit commitments in the PRD—be consistent and list the counting rule in the report). **Numerator**: how many have a **clear, defensible** reflection in the ERD (any reasonable section). **PRD coverage %** = (numerator / denominator) × 100. |
 | **Traceability accuracy** | Quality of ID/content mapping from ERD back to PRD. | **Denominator**: number of trace links you assess (e.g. ENG rows, FR references, epics tied to requirements—exclude bare AutoSpec ID tokens as “errors” by themselves). **Numerator**: links that **correctly** map to a PRD item. Broken, missing, or invented mappings count in the denominator as **not** accurate. **Traceability accuracy %** = (numerator / denominator) × 100. |
-| **Hallucination rate** | Share of reviewed ERD **substance** that is unsourced. | **Denominator**: count of **substantive** ERD elements you reviewed (e.g. deliverable descriptions, epic narratives, NFR statements—**not** AutoSpec-generated IDs alone, not empty cells). **Numerator**: elements you classify as **unsourced / hallucinated** per the rules in §4. **Hallucination rate %** = (numerator / denominator) × 100. If you flagged zero unsourced items, the rate can be **0%** with denominator stated. |
-| **Content fidelity (PRD)** | Single rollup of how faithful ERD content is to the PRD, combining coverage and hallucinations. | **Default formula:** Content fidelity % = **PRD coverage % × (1 − hallucination rate / 100)**, using the percentages above (cap at 100, floor at 0). If hallucination rate is N/A, use **PRD coverage %** as fidelity and say so. Optionally add **−5** percentage points per **severe** traceability break (max −15), documented in the metrics notes. |
+| **Hallucination rate** | Share of reviewed ERD **substance** (outside System Context) that is a **true** hallucination: not supported by the PRD and **not** plausibly sourced from the **System Context** block. | **Denominator**: count of **substantive** ERD elements you review for this metric—typically **deliverables, epics, NFRs, and similar rows outside the System Context section** (same counting rule as before; **not** AutoSpec-generated IDs alone, not empty cells). **Do not** double-count the System Context *section’s own* narrative rows in this denominator; those use **Unsupported / contradictory context claims** and other System Context metrics. **Numerator**: elements that lack PRD support **and** for which you **cannot** find an adequate match in the **System Context** text—list the rest in **§4b**, not here. **Hallucination rate %** = (numerator / denominator) × 100. If the generated ERD has **no** System Context block, use PRD-only unsourced logic for the numerator. If zero items qualify, the rate can be **0%** with denominator stated. |
+| **Content fidelity (PRD)** | Single rollup of how faithful ERD content is to the PRD, combining coverage and hallucinations. | **Default formula:** Content fidelity % = **PRD coverage % × (1 − hallucination rate / 100)**, using the **hallucination rate** that **excludes** context-traced items (above). If hallucination rate is N/A, use **PRD coverage %** as fidelity and say so. Optionally add **−5** percentage points per **severe** traceability break (max −15), documented in the metrics notes. |
 | **Capability label accuracy** | Correctness of the Capability field in each ENG-XXX row against the capability names defined in the PRD. | Build a **canonical capability list** from the PRD (one entry per distinct capability heading, scope area, or feature grouping as stated in the PRD). **Denominator**: total ENG-XXX rows that carry a Capability field. **Numerator**: rows whose Capability value **matches** (case-insensitive, minor punctuation tolerance) one canonical capability name. A paraphrased, merged, or invented capability label counts as inaccurate. **Accuracy %** = (numerator / denominator) × 100. List every mismatch in §5 Traceability alongside the correct PRD capability name. |
 | **Section classification accuracy** | Whether deliverables are placed in the correct ERD section — Functional Engineering Deliverables vs Non-Functional Engineering Deliverables. | Scan every ENG-XXX and NFR-XXX item across both sections. For each, assess whether its description primarily concerns **internal monitoring, alerting, reporting, observability, SLA tracking, operational dashboards, or audit compliance** — these are non-functional by nature and belong in Non-Functional Deliverables. Items that describe **new features, API endpoints, workflow logic, or user-facing capabilities** belong in Functional Deliverables. **Denominator**: total items assessed. **Numerator**: items in the correct section. **Classification accuracy %** = (numerator / denominator) × 100. Flag every misplaced item in §3 Completeness with the recommended target section. |
 
@@ -68,7 +68,7 @@ Present a **summary table** (required). **Every row must include a confidence** 
 
 **Overall confidence in Step 1 scores** (required): **Low / Medium / High** plus **one sentence** on what limits certainty (e.g. PRD length, table extraction quality, overlapping requirements).
 
-**Audit trail (recommended for defensibility):** After the summary table, add a short **“Counting basis”** subsection: how PRD items were enumerated for coverage, what counted as a “substantive ERD element” for hallucination rate, and what counted as a “trace link” for traceability—so percentages are not opaque.
+**Audit trail (recommended for defensibility):** After the summary table, add a short **“Counting basis”** subsection: how PRD items were enumerated for coverage, what counted as a “substantive ERD element” for hallucination rate (and, when System Context exists, that **context-traced** non-PRD items are **excluded** from the hallucination numerator and listed in §4b), and what counted as a “trace link” for traceability—so percentages are not opaque.
 
 Then add **2–4 bullets**:
 
@@ -103,13 +103,30 @@ Surface these as standing recommendations when applicable (the evaluator cannot 
 
 ## 4. Hallucination / Unsourced Content
 
-- **Do not treat generated IDs as hallucination.** AutoSpec assigns FR-001, ENG-001, EPIC-001, etc. when the PRD has no explicit IDs; that is expected. List only **content** that has no basis in the PRD: invented capabilities, deliverable/epic names or descriptions, milestone labels, or other substantive text (not the IDs themselves).
+**Scope:** This section has two parts when the generated ERD includes a **System Context** block; otherwise use **§4a** only (same as historical behavior).
+
+### 4a. Hallucinations (not in PRD, not in System Context)
+
+- **Do not treat generated IDs as hallucination.** AutoSpec assigns FR-001, ENG-001, EPIC-001, etc. when the PRD has no explicit IDs; that is expected. List only **content** with **no** basis in the PRD and **no** substantiating match in the **System Context** block: invented capabilities, deliverable/epic names or descriptions, milestone labels, or other substantive text outside System Context (not the IDs themselves).
+- **“Substantive match” in System Context** means the **same or clearly equivalent** fact, number, product name, repo, endpoint detail, or theme appears in the System Context narrative/tables (Confluence/GitHub summaries **as written in the ERD**). The evaluator does **not** access live wikis or GitHub; matching is **text-in-document** only. Vague or generic context (“we use modern APIs”) does **not** automatically absolve a specific unsourced ERD claim—use judgment and state the link briefly when you move an item to §4b.
 - **Process/generation metadata need not be flagged.** Boilerplate such as the Change Log line "Generated from approved PRD Analysis, Engineering Spec, and JIRA Work Plan" describes the AutoSpec workflow, not PRD-derived content; do not list it as unsourced unless you are explicitly evaluating that claim.
 - Format: table or bullets with:
-  - **ERD location** (section + row or element)
+  - **ERD location** (section + row or element; exclude System Context subsections from this table *unless* the same text is duplicated in main deliverables and unsourced)
   - **Content** (short description of the unsourced item – not ID tokens like FR-001)
-  - **Reason** (e.g. "No matching PRD capability or requirement")
-- If none: state "No unsourced or hallucinated content found."
+  - **Reason** (e.g. "No matching PRD content; not stated in System Context")
+- If none: state "No hallucinated or unsourced content found outside of System Context–traceable material."
+
+### 4b. Traced to System Context (not in PRD) — *only when a System Context block exists*
+
+- **Not exported to Excel or Power Automate:** This sub-section is for the **in-chat Markdown report** only. The Excel **`PRD_Analysis`** sheet and the **`submitEvaluationReport`** / `prdAnalysis` JSON carry **`hallucinations` (§4a) only**—see `xlsx_report_export.md` and `power_automate_report.md`.
+- Use this sub-section for substantive ERD claims (in **Functional / NFR / Epics / E2E** or other **non–System-Context** tables) that **do not** appear in the **PRD** but **do** have a **clear** basis in the **System Context** text in the same generated ERD.
+- For each row:
+  - **ERD location** (section + row)
+  - **Content** (the claim)
+  - **System Context reference** (short pointer: e.g. “GitHub — repo X, key findings row”, “Confluence — page title Y”)
+  - **Note (required, fixed intent):** State that the content **was not found in the PRD** but **was traced to the System Context** section; the **evaluator cannot verify** whether it is factually **correct** (no access to Confluence/GitHub). This is **not** scored as a hallucination; it is **excluded** from the **Hallucination rate** numerator; it **does** help readers see sourcing beyond the PRD.
+- If there are no such items: state "No non-PRD substantive claims were solely explained by System Context" or omit the sub-table if the block is empty.
+- If the generated ERD has **no** System Context section, **omit §4b** entirely.
 
 ## 5. Traceability Summary
 
@@ -130,7 +147,7 @@ Surface these as standing recommendations when applicable (the evaluator cannot 
 
 ## 6. Recommendations
 
-- Prioritized list of actions (e.g. "Add NFR for X from PRD section Y", "Remove epic Z (unsourced)", "Fix milestone format in Epics table").
+- Prioritized list of actions (e.g. "Add NFR for X from PRD section Y", "Remove epic Z (unsourced)", "Fix milestone format in Epics table"). Distinguish **true** unsourced items (§4a) from **context-only** sourcing (§4b)—recommendations may ask product/engineering to **align PRD** with context-backed facts *or* to **narrow** System Context if it introduces scope not in the PRD.
 - Reminder: "If you have an existing ERD from your engineering team (**DOCX** or **Markdown**), you can share it for a structure comparison (Document Metadata, Monthly Delivery Summary, Functional/Non-Functional Deliverables, Engineering Epics, E2E Testing Plan, **System Context** when present)."
 
 ---

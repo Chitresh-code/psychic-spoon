@@ -13,6 +13,17 @@ The evaluator has **no access to GitHub or Confluence**. Do **not** score “sou
 ### Where it appears in reports
 
 - **Step 1:** Integrate System Context into **Quantitative Metrics** (see `evaluation_report_schema.md`) and, where useful, **Completeness**, **Hallucination**, **Traceability**, and **Recommendations** when gaps concern context.
+
+### Hallucination triage vs System Context (Step 1)
+
+When flagging **unsourced** or **hallucinated** content in **Functional / NFR / Epics / E2E** (or similar) **outside** the System Context block:
+
+1. **First** check the **PRD** for a defensible basis.
+2. If missing in the PRD, **second** check whether the **same or clearly equivalent substance** appears in the generated ERD’s **System Context** section (Confluence/GitHub summaries **as written in the document**—no live verification).
+3. **If** it appears in System Context: put it in **`evaluation_report_schema.md` §4b** (*Traced to System Context, not in PRD*) in the **Markdown** report, with a short pointer to where in System Context it appears, and the required disclaimer that the evaluator **cannot verify** external correctness. **Do not** count it in the **Hallucination rate** numerator; **do not** list it in §4a. **Do not** add §4b items to the Excel **`PRD_Analysis`** sheet or to **`submitEvaluationReport`** (those channels list **true hallucinations / §4a only**).
+4. **If** it appears in **neither** PRD nor System Context: treat as a **hallucination** in §4a and count it in the **Hallucination rate** numerator (subject to the usual “no IDs / boilerplate” rules in `evaluation_report_schema.md`).
+
+This does **not** remove the need for **Unsupported / contradictory context claims** and other System Context quality metrics for the **content of the System Context block itself**.
 - **Step 2:** Treat **System Context** as the **seventh canonical section** (after E2E Testing Plan). Include **Structure check ledger** and **Content facet ledger** for System Context per `structure_analysis_schema.md` (§8).
 - **Step 3:** Apply the same **scoped** rules as other sections: evaluate System Context rows/themes only inside the **declared engineering slice** (see `scope_aligned_comparison_schema.md`).
 
