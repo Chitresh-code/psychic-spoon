@@ -1,11 +1,13 @@
-# Step 2: Structure and Content Analysis – Generated ERD vs Existing Engineering ERD
+# Step 2: Generated vs team ERD — content-first comparison
 
 Use this schema when the user provides an **existing ERD** (**DOCX** or **Markdown**) from the engineering team.
 
-**System Context** (seventh section): See **`system_context_schema.md`** for Step 1–3 metric alignment and no-external-verification rules.
+**Reader-facing name:** **Generated vs team ERD** (Excel tab `Vs_team_ERD`). Use this schema for **full-scope** Step 2 only—after the scope gate in `workflow_operations.md` when the mode is **full scope** (or auto-selected full-program). For **reduced scope**, use `scope_aligned_comparison_schema.md` instead.
+
+**System Context** (seventh section): See **`system_context_schema.md`** for Step 1–2 and Step 4 metric alignment and no-external-verification rules.
 
 - **Reference standard:** The **engineering ERD is the reference.** Your job is to assess **how well the generated ERD** matches it. Do not judge or assess the engineering ERD. Do not say the generated ERD is "better" or "more complete"; frame all findings as gaps or changes needed **in the generated ERD** to align with the engineering template.
-- **Two parts per section:** (1) **Structure** – sections, order, tables, headers. (2) **Content analysis** – how the engineering ERD analyzes and articulates requirements in that section; how the generated ERD compares; what the generated ERD could adopt. Do not re-evaluate PRD coverage; content analysis is about how requirements are expressed inside the ERD.
+- **Content-first comparison:** Judge alignment primarily on **content**—how the engineering ERD analyzes and articulates requirements in each section, how the generated ERD compares, and what the generated ERD could adopt. **Do not** compute or report a **structural alignment %**; note layout, column, or ordering gaps **briefly in narrative** (and in recommendations) when they materially affect usability. Do not re-evaluate PRD coverage.
 - **System Context:** When present, evaluate per **`system_context_schema.md`** (seventh canonical section). **No** live GitHub or Confluence verification.
 
 ## Canonical ERD sections (in order)
@@ -22,36 +24,23 @@ Use this schema when the user provides an **existing ERD** (**DOCX** or **Markdo
 
 ## Report section order (strict)
 
-1. Structure and Content Summary (includes **Quantitative Metrics**)
-2. Document Metadata (Structure + Content analysis)
-3. Monthly Delivery Summary (Structure + Content analysis)
-4. Functional Engineering Deliverables (Structure + Content analysis)
-5. Non-Functional Engineering Deliverables (Structure + Content analysis)
-6. Engineering Epics (Structure + Content analysis)
-7. E2E Testing Plan (Structure + Content analysis)
-8. System Context (Structure + Content analysis)
+1. Generated vs team ERD — summary (includes **Quantitative Metrics**)
+2. Document Metadata (Content analysis; optional short structure notes)
+3. Monthly Delivery Summary (Content analysis; optional short structure notes)
+4. Functional Engineering Deliverables (Content analysis; optional short structure notes)
+5. Non-Functional Engineering Deliverables (Content analysis; optional short structure notes)
+6. Engineering Epics (Content analysis; optional short structure notes)
+7. E2E Testing Plan (Content analysis; optional short structure notes)
+8. System Context (Content analysis; optional short structure notes)
 9. Alignment Recommendations  
 
 ---
 
 ## Metric definitions (Step 2)
 
-Do **not** report only coarse **0 / 50 / 100** labels. Headline percentages must come from **counted bases** (structure checks; content facets). You may add a **readability band** (Match / Partial / Does not match) **derived from** the computed % using the thresholds below.
+Do **not** report only coarse **0 / 50 / 100** labels. Headline percentages must come from **counted bases** (content facets). You may add a **readability band** (Match / Partial / Does not match) **derived from** the section **content %** using the thresholds below.
 
-**N/A:** If a section is **absent in the engineering ERD** (e.g. no Epics table), do **not** reward the generated ERD for having more. For that section, set **structure** and **content** to **N/A** and exclude from averages (re-normalize over sections that apply).
-
-### Per-section structure % (concrete basis)
-
-For each of the **seven** sections (when System Context exists in either doc; otherwise six), define **structure checks** against the **engineering ERD** (reference). Checks must be **countable**. Adapt lists to what the documents actually contain.
-
-| # | Check (examples—customize) | Pass = 1, else 0 |
-|---|----------------------------|------------------|
-| 1 | **Presence:** Comparable section exists in generated (same role in doc flow). | |
-| 2 | **Layout class:** Table vs narrative vs hybrid matches reference intent (e.g. both tabular). | |
-| 3+ | **Columns / fields:** For tables, each **required** column (or metadata field) from the engineering ERD appears in generated with same **semantic** role (name may differ slightly—justify). Count **one check per required column/field**. | |
-
-- **Structure % (section)** = (passed checks / applicable checks) × 100. State **passed / applicable** (e.g. `8/9`; exclude checks that do not apply and say why).
-- If there is **no table** in the reference but both use prose, use a **smaller checklist** (presence + paragraph structure + bullets) still expressed as **x/y**.
+**N/A:** If a section is **absent in the engineering ERD** (e.g. no Epics table), do **not** reward the generated ERD for having more. For that section, set **content** to **N/A** and exclude from averages (re-normalize over sections that apply).
 
 ### Per-section content % (concrete basis)
 
@@ -76,9 +65,7 @@ For each section, score **exactly five content facets** (if a facet does not app
 
 | Metric | Meaning | How to compute |
 |--------|---------|----------------|
-| **Structural alignment** | Layout vs engineering ERD. | **Average** of the per-section **structure %** values (**six or seven** sections—exclude N/A). |
-| **Content alignment** | Style/convention vs engineering ERD. | **Average** of the per-section **content %** values (**six or seven**—exclude N/A). |
-| **Combined engineering alignment** | Single headline. | **(Structural alignment % + Content alignment %) / 2** |
+| **Content alignment** | Style/convention vs engineering ERD. | **Average** of the per-section **content %** values (**six or seven** sections—exclude N/A). **This is the only headline %** for Step 2; do not report structural or combined rollups. |
 
 ### Readability band (optional, derived from %)
 
@@ -92,25 +79,16 @@ Use bands only **after** showing the **numeric %** and **basis**; bands are not 
 
 ### Confidence (Step 2)
 
-- **Per headline metric:** add **Confidence** (Low / Medium / High) and **one reason** (e.g. messy tables, Markdown vs Word table mismatch, wrong input format—PDF instead of DOCX/Markdown, minimal reference ERD).
-- **Structural vs content confidence** (optional if split): e.g. High structural / Medium content when reference is sparse on prose.
+- **Headline Content alignment:** add **Confidence** (Low / Medium / High) and **one reason** (e.g. messy tables, Markdown vs Word table mismatch, wrong input format—PDF instead of DOCX/Markdown, minimal reference ERD).
 - **Overall confidence** in Step 2 scores (required): one sentence + Low/Medium/High.
 
-### Auditability: check and facet ledgers (required)
+### Auditability: facet ledgers (required) and structure notes (optional)
 
-Rollup numbers alone (e.g. `11/12 checks`, `2.5/5 facets`) are **not sufficient**. Readers must see **what** was checked and **what failed**.
+Rollup numbers alone (e.g. `2.5/5 facets`) are **not sufficient**. Readers must see **which facets** drove the score.
 
-**Where:** In **each** of report sections **§2–§8** (per canonical section, including **System Context**), place **two tables** *before* the narrative bullets—**unless** that section is **N/A** (then one sentence: why no ledger; no scores).
+**Where:** In **each** of report sections **§2–§8** (per canonical section, including **System Context**), place the **Content facet ledger** *before* the narrative bullets—**unless** that section is **N/A** (then one sentence: why no ledger; no scores).
 
-**1) Structure check ledger** — one row per check that counts toward `y` in `x/y`:
-
-| # | Check (what was verified) | Reference (engineering ERD) | Generated ERD | Pass? |
-|---|---------------------------|------------------------------|---------------|-------|
-| 1 | … | Concrete fact from reference | Concrete fact from generated | Yes / No |
-
-- **Check** names must be **specific** (e.g. “STATUS column present”, “Month field in metadata”), not vague (“layout ok”).
-- **Reference** / **Generated**: one short **factual** phrase each (not judgment).
-- Rows must **match** the same checks used to compute structure % for that section. **x** = count of Yes; **y** = applicable rows.
+**1) Structure / layout (optional)** — no separate **structure %**. If missing columns, wrong section order, or table shape mismatches **materially** affect the generated ERD, add **up to 3 short bullets** (or a tiny table) citing concrete differences. Skip if nothing material.
 
 **2) Content facet ledger** — **exactly five** rows:
 
@@ -120,18 +98,18 @@ Rollup numbers alone (e.g. `11/12 checks`, `2.5/5 facets`) are **not sufficient*
 
 - Facet names must match the **five** facets used for the section **content %** sum.
 
-**§1 Quantitative Metrics** may keep only the **summary** row per section; **§2–§8** contain the **full ledgers**.
+**§1 Quantitative Metrics** keeps the **per-section content %** summary; **§2–§8** contain the **full content facet ledgers** (and optional structure bullets).
 
 ---
 
-## 1. Structure and Content Summary
+## 1. Generated vs team ERD — summary
 
 - **Documents:** Generated ERD vs Engineering ERD (filenames or "uploaded").
 - **Reference:** Engineering ERD is the reference; we assess the generated ERD against it.
-- **Overall structure match:** Aligned / Partial / Not aligned (from the perspective of the generated ERD matching the engineering ERD).
-- **Match terms (structure):** **Match** = generated ERD aligns with engineering ERD for that section. **Partial** = some alignment but specific gaps (e.g. missing column, different order). **Does not match** = structure or format differs in important ways; generated ERD should be changed to align.
+- **Overall content match:** Aligned / Partial / Not aligned (from the perspective of the generated ERD matching the engineering ERD’s **content style and conventions**).
+- **Match terms (content):** **Match** = generated ERD is close to engineering ERD for that section’s **articulation** of requirements. **Partial** = useful overlap but clear gaps in granularity, phrasing, or conventions. **Does not match** = generated ERD should change substantially to align with how engineering expresses that section.
 - **Content analysis summary (2–3 lines):** How does the engineering ERD tend to analyze/articulate requirements overall? (e.g. granularity of deliverables, use of Jira IDs, narrative vs table style, epic scoping, E2E scenario style.) One or two high-level suggestions for what the generated ERD could adopt.
-- **One-line summary:** e.g. "Generated ERD matches section order; add STATUS column and consider engineering ERD’s deliverable granularity in Functional Deliverables."
+- **One-line summary:** e.g. "Generated ERD is close on metadata tone; adopt engineering ERD’s deliverable granularity and STATUS phrasing in Functional Deliverables."
 
 ### Quantitative Metrics (required)
 
@@ -139,29 +117,27 @@ Rollup numbers alone (e.g. `11/12 checks`, `2.5/5 facets`) are **not sufficient*
 
 | Metric | Result | How obtained | Confidence | Why |
 |--------|--------|--------------|------------|-----|
-| Structural alignment | …% | Mean of section structure % (6 or 7, exclude N/A) | Low / Med / High | … |
 | Content alignment | …% | Mean of section content % (6 or 7, exclude N/A) | Low / Med / High | … |
-| Combined engineering alignment | …% | (Structural + Content) / 2 | Low / Med / High | weakest link or overall doc quality |
 
 **Overall confidence** (required): one line **Low / Medium / High** + rationale.
 
 **Per-section scores (required):**
 
-| Section | Structure % | Structure basis (e.g. checks passed) | Content % | Content basis (e.g. facet points) | Band (optional) |
-|---------|-------------|--------------------------------------|-----------|-----------------------------------|-------------------|
-| Document Metadata | …% | x/y checks | …% | e.g. 4.0/5 | Match / Partial / Does not match |
-| Monthly Delivery Summary | …% | … | …% | … | … |
-| Functional Engineering Deliverables | …% | … | …% | … | … |
-| Non-Functional Engineering Deliverables | …% | … | …% | … | … |
-| Engineering Epics | …% | … | …% | … | … |
-| E2E Testing Plan | …% | … | …% | … | … |
-| System Context | …% | … | …% | … | … |
+| Section | Content % | Content basis (e.g. facet points) | Band (optional) |
+|---------|-----------|-----------------------------------|-----------------|
+| Document Metadata | …% | e.g. 4.0/5 | Match / Partial / Does not match |
+| Monthly Delivery Summary | …% | … | … |
+| Functional Engineering Deliverables | …% | … | … |
+| Non-Functional Engineering Deliverables | …% | … | … |
+| Engineering Epics | …% | … | … |
+| E2E Testing Plan | …% | … | … |
+| System Context | …% | … | … |
 
 Add **2–3 bullets**: interpretation (largest gaps by **numeric** gap, not only band), and any **per-section** confidence callouts if one section was hard to parse.
 
 ## 2. Document Metadata
 
-**Structure check ledger** (required) → then **Content facet ledger** (required) → then narrative.
+**Content facet ledger** (required) → optional short **structure/layout bullets** if material → then narrative.
 
 **Structure**
 - **Reference (engineering ERD):** Describe its metadata block (e.g. PROGRAM, DOMAIN, PROJECTS, SQUAD, TRACK, STEL, Engineering Manager, Technical Lead, Architect).
@@ -175,7 +151,7 @@ Add **2–3 bullets**: interpretation (largest gaps by **numeric** gap, not only
 
 ## 3. Monthly Delivery Summary
 
-**Structure check ledger** (required) → then **Content facet ledger** (required) → then narrative.
+**Content facet ledger** (required) → optional short **structure/layout bullets** if material → then narrative.
 
 **Structure**
 - **Reference (engineering ERD):** How is this section structured (e.g. single paragraph vs project-by-project blocks)?
@@ -188,12 +164,12 @@ Add **2–3 bullets**: interpretation (largest gaps by **numeric** gap, not only
 
 ## 4. Functional Engineering Deliverables
 
-**Structure check ledger** (required) → then **Content facet ledger** (required) → then narrative.
+**Content facet ledger** (required) → optional short **structure/layout bullets** if material → then narrative.
 
 **Structure**
 - **Reference (engineering ERD):** Table columns and order (e.g. CAPABILITY | FUNCTIONAL ENGINEERING DELIVERABLES | STATUS | DESCRIPTION).
 - **Generated ERD assessment:** Does the generated ERD have the same columns and order? List changes the **generated ERD** should make to match (e.g. add STATUS column, reorder columns).
-- **Owner/Team column check:** If the engineering ERD includes an Owner or Team column (or attributes deliverables to specific teams in descriptions), check whether the generated ERD does the same. If the engineering ERD has owner attribution and the generated ERD does not, flag this as a missing column in the structure check ledger.
+- **Owner/Team column check:** If the engineering ERD includes an Owner or Team column (or attributes deliverables to specific teams in descriptions), check whether the generated ERD does the same. If the engineering ERD has owner attribution and the generated ERD does not, flag this under **optional structure notes** or **Alignment Recommendations**.
 
 **Content analysis**
 - **Engineering ERD:** How does it analyze/articulate deliverables (e.g. granularity, phrasing, use of Jira/ticket IDs, traceability to PRD/FR, one row per deliverable vs grouped)?
@@ -204,7 +180,7 @@ Add **2–3 bullets**: interpretation (largest gaps by **numeric** gap, not only
 
 ## 5. Non-Functional Engineering Deliverables
 
-**Structure check ledger** (required) → then **Content facet ledger** (required) → then narrative.
+**Content facet ledger** (required) → optional short **structure/layout bullets** if material → then narrative.
 
 **Structure**
 - **Reference (engineering ERD):** Table columns and order.
@@ -218,7 +194,7 @@ Add **2–3 bullets**: interpretation (largest gaps by **numeric** gap, not only
 
 ## 6. Engineering Epics
 
-If **N/A** (no comparable reference section): state why; **no ledgers**. Otherwise: **Structure check ledger** → **Content facet ledger** → narrative.
+If **N/A** (no comparable reference section): state why; **no ledgers**. Otherwise: **Content facet ledger** (required) → optional structure bullets → narrative.
 
 **Structure**
 - **Reference (engineering ERD):** Does it have a dedicated Epics section/table? If yes, column names and order. If no, state that the engineering ERD does not use a separate Epics table.
@@ -231,7 +207,7 @@ If **N/A** (no comparable reference section): state why; **no ledgers**. Otherwi
 
 ## 7. E2E Testing Plan
 
-**Structure check ledger** (required) → then **Content facet ledger** (required) → then narrative.
+**Content facet ledger** (required) → optional short **structure/layout bullets** if material → then narrative.
 
 **Structure**
 - **Reference (engineering ERD):** How is this section presented (e.g. full table vs link to wiki)?
@@ -244,7 +220,7 @@ If **N/A** (no comparable reference section): state why; **no ledgers**. Otherwi
 
 ## 8. System Context
 
-If **N/A** (no comparable System Context in the engineering ERD and no generated block to compare): state why; **no ledgers**. Otherwise: **Structure check ledger** → **Content facet ledger** → narrative. Full metric definitions: **`system_context_schema.md`**.
+If **N/A** (no comparable System Context in the engineering ERD and no generated block to compare): state why; **no ledgers**. Otherwise: **Content facet ledger** (required) → optional structure bullets → narrative. Full metric definitions: **`system_context_schema.md`**.
 
 **Structure**
 - **Reference (engineering ERD):** Confluence/GitHub summary subsections, table shapes, column roles.
@@ -272,9 +248,9 @@ These recommendations address common ERD quality gaps that engineering teams con
 
 ---
 
-## Relationship to Step 3 (scope-aligned comparison)
+## Relationship to reduced scope (same delivery scope)
 
-Step 2 compares **entire documents**. If the **engineering ERD only covers a time window or requirement subset** (common for monthly team ERDs) while the **generated ERD reflects broader PRD scope**, Step 2 metrics can be **misleadingly low**. After Step 2, the agent should **detect** that situation (see `prompt.md`) and offer **Step 3**, which follows `scope_aligned_comparison_schema.md`—same **metric model** (checks + five facets) and **confidence**, but **scoped slice + lenient constraints**. Step 3 is an optional follow-on.
+This schema compares **entire documents** (strict). If the **engineering ERD only covers a subset of the PRD** while the **generated ERD reflects broader PRD scope**, whole-document scores can be **misleadingly low**. **Before** running this analysis, follow `workflow_operations.md`: infer coverage vs PRD; if partial, give a **short** coverage list and let the user choose **full scope** (this schema) or **reduced scope** (`scope_aligned_comparison_schema.md`—same **content-first** model and **five facets**, but **scoped slice + lenient constraints**).
 
 ---
 

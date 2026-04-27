@@ -53,8 +53,8 @@ Every POST uses the same **`WorkbookSheetPayload`** body:
 Send **detail sheets first** (so scores exist), then **overview**, then **recommendations**:
 
 1. `PRD_Analysis` (if Step 1 completed)
-2. `Eng_ERD_Comparison` (if Step 2 completed)
-3. `Scoped_Alignment` (if Step 3 completed)
+2. `Eng_ERD_Comparison` (if Step 2 **full scope** completed)
+3. `Scoped_Alignment` (if Step 2 **reduced scope** completed)
 4. `System_Context_Comp` (if Step 4 completed)
 5. `Report_Overview` — full `overviewScoreSummary` headline table (same rows as Excel Sheet 1 section B)
 6. `Recommendations` — consolidated `recommendations` array
@@ -211,13 +211,13 @@ Collect **all** content facet ledger rows from **§2 through §8** into one flat
 
 ---
 
-## Building `scopedAlignmentReview` (Step 3)
+## Building `scopedAlignmentReview` (Step 2 reduced scope)
 
 Source: the Markdown report from `scope_aligned_comparison_schema.md`.
 
-Same structure as Step 2 but with:
+Same structure as full-scope Step 2 but with:
 - `declaredScope` from §1 (engineering scope, how inferred, generated slice)
-- `scopeFairnessNote` from §3 (Step 2 vs Step 3 delta)
+- `scopeFairnessNote` from §3 (full-scope vs reduced-scope delta **when both exist in the session**; otherwise the single-sentence scoped-only explanation)
 - Headline metrics labeled "(scoped)"
 - Structure checks and content facets evaluated on the declared slice only
 
@@ -282,8 +282,8 @@ The flow receives each POST on the same HTTP trigger. Recommended design:
 2. **Switch** on `triggerBody()?['sheetName']`:
    - `Report_Overview` — store/update overview score summary, initialize correlation keys from root fields.
    - `PRD_Analysis` — store Step 1 data.
-   - `Eng_ERD_Comparison` — store Step 2 data.
-   - `Scoped_Alignment` — store Step 3 data.
+   - `Eng_ERD_Comparison` — store Step 2 full-scope data.
+   - `Scoped_Alignment` — store Step 2 reduced-scope data.
    - `System_Context_Comp` — store Step 4 data.
    - `Recommendations` — store recommendations; optionally email summary or other notifications per your design.
 3. **Response:** Return `{"status": "accepted", "message": "Sheet received"}` with HTTP 200.

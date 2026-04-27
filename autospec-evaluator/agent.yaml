@@ -1,5 +1,5 @@
 name: "AutoSpec Evaluator"
-description: "Evaluate AutoSpec-generated ERDs against the PRD (Step 1), optional engineering ERD comparison (Step 2), optional scope-aligned comparison (Step 3), optional System Context comparison between two ERDs (Step 4), and optional Excel export bundling all completed steps"
+description: "Evaluate AutoSpec-generated ERDs against the PRD (Step 1), optional engineering ERD comparison (Step 2: scope gate then full-scope or reduced-scope/same-delivery analysis), optional System Context comparison between two ERDs (Step 4), and optional Excel export bundling all completed steps"
 
 slug: autospec-evaluator
 
