@@ -62,25 +62,33 @@ All percentages **0–100** when shown. State **numerator / denominator** (or **
 - **Step 2 (either mode):** **Content alignment** (or **Content alignment (scoped)**) rollup is the **mean** of applicable section **content %** values only (**six or seven** sections, including **System Context** when not N/A). **Do not** compute or report a separate **structural alignment** %.
 
 ---
-
 ## Step 4 — Research context (two ERDs)
-
-**Reader-facing name:** **Research context (two ERDs)** (Excel tab `Context_compare`). Internal “Step 4” is fine for operators only.
-
-Run **after Step 2** completes (or when the user explicitly asks for Step 4 and Step 2 is already done). Requires **PRD** from Step 1 and **two ERDs’** System Context sections:
-
-- **Option A:** Generated ERD vs **engineering ERD** (from Step 2), or  
-- **Option B:** User uploads **another ERD** (DOCX or Markdown); compare that ERD’s System Context to the **generated** ERD (or clarify pair if user specifies).
-
-**No external verification.** Use PRD + in-document text only.
-
+**Reader‑facing name:** **Research context (two ERDs)** (Excel tab `Context_compare`).  
+Run this step **after Step 2** (or when the user explicitly asks for Step 4 and Step 2 is already done).  
+It now **directly compares the System‑Context blocks of the two ERDs** instead of referencing the PRD.
+### What to do
+1. **Extract** the bullet‑point (or numbered) items that appear under the `## System Context` header in each uploaded ERD.  
+2. **Compute** a simple overlap set:  
+   * **Shared items** – exact lines that appear in *both* ERDs.  
+   * **Unique to ERD A** – lines that appear only in the first ERD.  
+   * **Unique to ERD B** – lines that appear only in the second ERD.  
+3. **Calculate** a Jaccard similarity score:  
+   \[
+   \text{Similarity} = \frac{|A\cap B|}{|A\cup B|}\times 100\%
+   \]
+4. **Render** a Markdown subsection titled **“System Context Comparison”** placed **after** the quantitative tables (Table A/B) that already exist for Step 4. The subsection should contain:
+   * **Similarity score** (percentage).  
+   * A bullet list of **Shared items**.  
+   * A bullet list of **Unique to ERD A**.  
+   * A bullet list of **Unique to ERD B**.
+   
 ### Report section order (strict)
-
-1. Step 4 Summary (documents compared, option A or B, PRD used)
-2. **Quantitative Metrics** — use **two tables** (format below); do **not** hide per-ERD scores inside parity-only wording
-3. PRD mapping / alignment ledger (optional but recommended)
-4. Contradiction ledger
-5. Interpretation (narrative); **do not** duplicate the metric tables here—reference §2
+1. Step 4 Summary (documents compared, option A or B, PRD used).  
+2. **Quantitative Metrics** – the existing Table A and Table B (unchanged).  
+3. **System Context Comparison** – the new subsection described above.  
+4. PRD mapping / alignment ledger (optional but recommended).  
+5. Contradiction ledger.  
+6. Interpretation (narrative); **do not** duplicate the metric tables here—reference §2.
 
 ### Quantitative Metrics — required layout (Step 4)
 
