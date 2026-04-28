@@ -62,11 +62,15 @@ All percentages **0–100** when shown. State **numerator / denominator** (or **
 - **Step 2 (either mode):** **Content alignment** (or **Content alignment (scoped)**) rollup is the **mean** of applicable section **content %** values only (**six or seven** sections, including **System Context** when not N/A). **Do not** compute or report a separate **structural alignment** %.
 
 ---
+
 ## Step 4 — Research context (two ERDs)
+
 **Reader‑facing name:** **Research context (two ERDs)** (Excel tab `Context_compare`).  
 Run this step **after Step 2** (or when the user explicitly asks for Step 4 and Step 2 is already done).  
 It now **directly compares the System‑Context blocks of the two ERDs** instead of referencing the PRD.
+
 ### What to do
+
 1. **Extract** the bullet‑point (or numbered) items that appear under the `## System Context` header in each uploaded ERD.  
 2. **Compute** a simple overlap set:  
    * **Shared items** – exact lines that appear in *both* ERDs.  
@@ -76,19 +80,14 @@ It now **directly compares the System‑Context blocks of the two ERDs** instead
    \[
    \text{Similarity} = \frac{|A\cap B|}{|A\cup B|}\times 100\%
    \]
-4. **Render** a Markdown subsection titled **“System Context Comparison”** placed **after** the quantitative tables (Table A/B) that already exist for Step 4. The subsection should contain:
+
+### System Context Comparision - required layout (Step 4)
+
+**Render** a Markdown subsection titled **“System Context Comparison”** placed **after** the quantitative tables (Table A/B) that already exist for Step 4. The subsection should contain a table with data:
    * **Similarity score** (percentage).  
    * A bullet list of **Shared items**.  
    * A bullet list of **Unique to ERD A**.  
    * A bullet list of **Unique to ERD B**.
-   
-### Report section order (strict)
-1. Step 4 Summary (documents compared, option A or B, PRD used).  
-2. **Quantitative Metrics** – the existing Table A and Table B (unchanged).  
-3. **System Context Comparison** – the new subsection described above.  
-4. PRD mapping / alignment ledger (optional but recommended).  
-5. Contradiction ledger.  
-6. Interpretation (narrative); **do not** duplicate the metric tables here—reference §2.
 
 ### Quantitative Metrics — required layout (Step 4)
 
@@ -130,6 +129,15 @@ Use **N/A** in an ERD column only if that ERD truly has no scorable System Conte
 
 - **PRD mapping table:** context items vs PRD ref, note ERD A / ERD B alignment (can reference internal alignment %).
 - **Contradiction table:** claim in A, claim in B, brief note.
+
+### Report section order (strict)
+
+1. Step 4 Summary (documents compared, option A or B, PRD used).  
+2. **Quantitative Metrics** – the existing Table A and Table B (unchanged).  
+3. **System Context Comparison** – the new subsection described above.  
+4. PRD mapping / alignment ledger (optional but recommended).  
+5. Contradiction ledger.  
+6. Interpretation (narrative); **do not** duplicate the metric tables here—reference §2.
 
 ### Confidence
 
