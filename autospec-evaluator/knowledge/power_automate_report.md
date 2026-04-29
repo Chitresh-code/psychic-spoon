@@ -46,7 +46,7 @@ Every POST uses the same **`WorkbookSheetPayload`** body:
 ## When to call the action
 
 - After the user asks to upload to SharePoint (or push the report through the flow), send **one POST per sheet** that exists for the completed evaluations.
-- **Skip sheets** for phases that did not run (e.g. no `System_Context_Comp` if Step 4 did not run).
+- **Skip sheets** for phases that did not run (e.g. no `System_Context_Comp` if Step 3 did not run).
 
 ## Recommended send order
 
@@ -55,7 +55,7 @@ Send **detail sheets first** (so scores exist), then **overview**, then **recomm
 1. `PRD_Analysis` (if Step 1 completed)
 2. `Eng_ERD_Comparison` (if Step 2 **full scope** completed)
 3. `Scoped_Alignment` (if Step 2 **reduced scope** completed)
-4. `System_Context_Comp` (if Step 4 completed)
+4. `System_Context_Comp` (if Step 3 completed; OpenAPI may still use legacy `Step4Summary`—map from Step 3 Markdown)
 5. `Report_Overview` — full `overviewScoreSummary` headline table (same rows as Excel Sheet 1 section B)
 6. `Recommendations` — consolidated `recommendations` array
 
@@ -135,19 +135,17 @@ Source: the Markdown report from `evaluation_report_schema.md`.
 
 ### `metrics`
 
-One `MetricRow` per row in the §2 Quantitative Metrics table. Include all core metrics **and** System Context metrics when applicable:
+One `MetricRow` per row in the §2 Quantitative Metrics table. Include **only** the core Step 1 metrics (Step 1 does **not** expose separate System Context dimension rows):
 
-- Structural completeness
 - PRD coverage
 - Traceability accuracy
 - Hallucination rate
 - Content fidelity (PRD)
+
+Optional extras if present as distinct rows in the Markdown §2 table (some reports still surface them in Traceability, not §2—omit if absent):
+
 - Capability label accuracy
 - Section classification accuracy
-- System Context structural completeness (if block exists)
-- Context–PRD alignment (if block exists)
-- Context relevance (if block exists)
-- Unsupported / contradictory context claims (if block exists)
 
 ### `countingBasis`
 
@@ -223,21 +221,21 @@ Same structure as full-scope Step 2 but with:
 
 ---
 
-## Building `systemContextComparison` (Step 4)
+## Building `systemContextComparison` (Step 3)
 
-Source: the Markdown report from `system_context_schema.md` Step 4.
+Source: the Markdown report from `system_context_schema.md` Step 3.
 
 ### `summary`
 
-ERD labels, option (A or B), PRD filename, confidence.
+ERD labels, option (A or B), confidence. **Do not** require PRD filename for this step’s logic—Step 3 is **ERD-only**.
 
 ### `perErdMetrics`
 
-One row per metric in Table A. Always show both `erdAPercent` and `erdBPercent`.
+**Step 3:** Omit or send **empty** `perErdMetrics` — there is **no** per-ERD Table A (no structural completeness / substantive item rate for Step 3). Legacy flows that expected per-ERD rows may leave this array empty.
 
 ### `crossErdMetrics`
 
-One row per metric in Table B. `result` is a string (percentage or qualitative label).
+One row per metric in the Step 3 **pair metrics** table (content similarity, inter-ERD consistency, overall Step 3). `result` is a string (percentage or qualitative label).
 
 ### `contradictions`
 
@@ -284,7 +282,7 @@ The flow receives each POST on the same HTTP trigger. Recommended design:
    - `PRD_Analysis` — store Step 1 data.
    - `Eng_ERD_Comparison` — store Step 2 full-scope data.
    - `Scoped_Alignment` — store Step 2 reduced-scope data.
-   - `System_Context_Comp` — store Step 4 data.
+   - `System_Context_Comp` — store Step 3 (two-ERD System Context) data.
    - `Recommendations` — store recommendations; optionally email summary or other notifications per your design.
 3. **Response:** Return `{"status": "accepted", "message": "Sheet received"}` with HTTP 200.
 

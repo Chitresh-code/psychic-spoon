@@ -20,10 +20,10 @@ Use language that explains **what was compared**, not evaluator jargon. Same lab
 | Step 1 | **PRD vs generated ERD** | Does the generated engineering spec reflect the PRD (coverage, traceability, risk of invented content)? |
 | Step 2 (full scope) | **Generated vs team ERD** | How closely does the generated ERD match the **reference engineering ERD** (whole documents, strict)? |
 | Step 2 (reduced scope) | **Same delivery scope** | Same spirit as **Generated vs team ERD**, but only for the **overlap period or slice** the team ERD actually covers (lenient). |
-| Step 4 | **Research context (two ERDs)** | Compare **Confluence/GitHub summary** sections between two ERDs against the PRD—no live wiki/repo checks. |
+| Step 3 | **Research context (two ERDs)** | Compare **Confluence/GitHub summary** sections **between the two ERDs only** (in-document text); **no PRD** in this phase—no live wiki/repo checks. |
 
 
-## Workbook size: at most 5 sheets (when Step 4 completed)
+## Workbook size: at most 5 sheets (when Step 3 completed)
 
 | # | Sheet purpose | Included when |
 |---|----------------|---------------|
@@ -31,11 +31,11 @@ Use language that explains **what was compared**, not evaluator jargon. Same lab
 | 2 | **PRD vs generated ERD** — full detail | Step 1 completed |
 | 3 | **Generated vs team ERD** — full detail | Step 2 completed with **full scope** |
 | 4 | **Same delivery scope** — full detail | Step 2 completed with **reduced scope** |
-| 5 | **Research context (two ERDs)** — full detail | Step 4 completed |
+| 5 | **Research context (two ERDs)** — full detail | Step 3 completed |
 
-**Default cap:** **≤4 sheets** when Step 4 has **not** run (omit sheet 5). When Step 4 **has** run, use **≤5 sheets**.
+**Default cap:** **≤4 sheets** when Step 3 has **not** run (omit sheet 5). When Step 3 **has** run, use **≤5 sheets**.
 
-- **4 sheets total** when Step 1 + Step 2 ran **twice** with different modes (full and reduced) + Step 4 did **not** run—rare.
+- **4 sheets total** when Step 1 + Step 2 ran **twice** with different modes (full and reduced) + Step 3 did **not** run—rare.
 - **3 sheets total** when Step 1 and **one** Step 2 outcome exist (Summary + PRD vs generated + **`Vs_team_ERD`** *or* **`Same_scope`**).
 - **2 sheets** if only Step 1 was completed (Summary + PRD vs generated).
 - **1 sheet** only if you must export with no detail sheets (avoid if possible).
@@ -54,7 +54,7 @@ Use these **exact worksheet names** so tabs read clearly without evaluator conte
 | `PRD_vs_generated` | Step 1 — PRD vs generated ERD |
 | `Vs_team_ERD` | Step 2 **full scope** — Generated vs team/reference ERD |
 | `Same_scope` | Step 2 **reduced scope** — Overlap / delivery-slice comparison |
-| `Context_compare` | Step 4 — Confluence/GitHub context in two ERDs |
+| `Context_compare` | Step 3 — Confluence/GitHub context in two ERDs (ERD-only comparison) |
 
 Optional numeric prefixes if you prefer sort order on disk: `01_Summary`, `02_PRD_vs_generated`, `03_Vs_team_ERD`, `04_Same_scope`, `05_Context_compare`.
 
@@ -76,7 +76,7 @@ Optional numeric prefixes if you prefer sort order on disk: `01_Summary`, `02_PR
 | Generated ERD | filename |
 | Engineering reference ERD | filename or “Not evaluated” |
 | Report generated | ISO date or session date |
-| Evaluations included | List only phases that ran—e.g. “PRD vs generated ERD; Generated vs team ERD” **or** “PRD vs generated ERD; Same delivery scope”; add “Research context (two ERDs)” when Step 4 completed |
+| Evaluations included | List only phases that ran—e.g. “PRD vs generated ERD; Generated vs team ERD” **or** “PRD vs generated ERD; Same delivery scope”; add “Research context (two ERDs)” when Step 3 completed |
 
 Use **two columns**: **A = label**, **B = value**. Left-align labels; wrap long paths in B.
 
@@ -87,14 +87,14 @@ Use **two columns**: **A = label**, **B = value**. Left-align labels; wrap long 
 
 List **headline metrics only** (percentages or Pass/Fail as appropriate)—one row per line item. Group with **blank row + small caps section title** between groups:
 
-1. **PRD vs generated ERD** (if run): PRD coverage, Traceability accuracy, Hallucination rate, Content fidelity, Overall confidence (short text OK in Score column). System Context findings stay **narrative** in the Markdown report—do not add a System Context % row here. Omitted from this summary (detail only on **`PRD_vs_generated`** sheet): capability label % and section placement % under **Traceability** in the Markdown report.
+1. **PRD vs generated ERD** (if run): PRD coverage, Traceability accuracy, Hallucination rate, Content fidelity, Overall confidence (short text OK in Score column). Step 1 has **no** standalone System Context section in Markdown—do not add a System Context % row here. Omitted from this summary (detail only on **`PRD_vs_generated`** sheet): capability label % and section placement % under **Traceability** in the Markdown report.
 2. **Generated vs team ERD** (if run): **Content alignment %** only, Overall confidence.
 3. **Same delivery scope** (if run): **Content alignment (scoped) %**, Overall confidence (scoped).
-4. **Research context (two ERDs)** (if run): **Context–PRD alignment** % and **Context relevance** % for ERD A and ERD B, **Overall Step 4** %, qualitative **Relevance consistency**, Overall confidence—aligned with `system_context_schema.md` Step 4 (no retired pair metrics).
+4. **Research context (two ERDs)** (if run): **Content similarity (System Context)** %, **Overall Step 3** % (same as content similarity per schema), qualitative **Inter-ERD consistency**, Overall confidence—aligned with `system_context_schema.md` Step 3 (no retired pair metrics; **no PRD-based** scores; **no** per-ERD structural/substantive table).
 
 Use these **same phrases** as **small caps section titles** above each score group so readers see one vocabulary from metadata through scores.
 
-Do **not** duplicate full ledgers here—only the **summary numbers** users need at a glance.
+Do **not** duplicate full subsection parameter point evidence here—only the **summary numbers** users need at a glance.
 
 ---
 
@@ -109,12 +109,11 @@ Suggested section order:
 1. **Executive summary** — overall result, one-line summary.
 2. **Quantitative metrics** — full table (metric, result, basis, confidence, why) if present in report (slim §2 set per `evaluation_report_schema.md`).
 3. **Counting basis** — how denominators were defined (optional).
-4. **System Context (when present)** — prose subsection from the Markdown report (shape, PRD alignment, relevance, unsupported claims; optional dimension % in text—**not** a row in the quantitative table).
-5. **Completeness gaps** — including **Misclassified deliverables** sub-table (ERD ID, current section, recommended section, reason) and **Structural recommendations** (owner attribution, repository coverage).
-6. **Capability label audit** — mismatches between ENG-XXX capability labels and PRD-defined capability names.
-7. **Hallucinations / unsourced content** — list **true hallucinations only** (per `evaluation_report_schema.md` **§4a**): not in the PRD and not substantively sourced from System Context. **Do not** include **§4b** (*Traced to System Context, not in PRD*) in the workbook; that material may appear in the **Markdown** report only.
-8. **Traceability** — ID mapping summary plus **§5.2** capability label audit (and optional capability **%**) and **§5.3** section placement (and optional placement **%**).
-9. **Recommendations**
+4. **Completeness gaps** — including **Misclassified deliverables** sub-table (ERD ID, current section, recommended section, reason) and **Structural recommendations** (owner attribution, repository coverage).
+5. **Capability label audit** — mismatches between ENG-XXX capability labels and PRD-defined capability names.
+6. **Hallucinations / unsourced content** — list **true hallucinations only** (per `evaluation_report_schema.md` **§4a**): not in the PRD and not substantively sourced from System Context. **Do not** include **§4b** (*Traced to System Context, not in PRD*) in the workbook; that material may appear in the **Markdown** report only.
+7. **Traceability** — ID mapping summary plus **§5.2** capability label audit (and optional capability **%**) and **§5.3** section placement (and optional placement **%**).
+8. **Recommendations**
 
 **Formatting:** Header row for each table = bold + light gray fill. **Freeze panes** below the first table header row (e.g. row after section title) where useful. Set **column widths** so content is readable (e.g. min 12 for text columns).
 
@@ -128,7 +127,7 @@ Sections (same separation rules: blank row + section header row):
 
 1. **At a glance** — headline **Content alignment** %, overall content match, interpretation.
 2. **Per-section scores** — **content %** table only (no structure % columns).
-3. **Content facet ledgers** — all sections (long format).
+3. **Subsection metric evidence** — per section metric block (metric/result/basis/confidence), plus point-based `Parameters considered` where each point explains why that parameter is used in the metric.
 4. **Optional structure notes** — concise bullets if the Markdown report included them.
 5. **Alignment recommendations**
 
@@ -143,22 +142,22 @@ Sections:
 1. **Scope** — declared scope, inference, generated slice, fairness vs full-document comparison.
 2. **Scoped summary metrics** — **Content alignment (scoped)** only
 3. **Per-section scoped scores** — content % only
-4. **Content facet ledgers (scoped)**
+4. **Subsection metric evidence (scoped)** — per section metric block, plus scoped point-based `Parameters considered` where each point explains why that parameter is used in the metric.
 5. **Optional scoped structure bullets**
 6. **Recommendations**
 
 ---
 
-## Sheet 5 — `Context_compare` (if Step 4 completed)
+## Sheet 5 — `Context_compare` (if Step 3 completed)
 
-**Top of sheet (recommended):** merged banner — **Research context (two ERDs)**; optional subtitle: *Confluence/GitHub summary sections written into each ERD, compared in light of the PRD; no live wiki or repo verification.*
+**Top of sheet (recommended):** merged banner — **Research context (two ERDs)**; optional subtitle: *System Context sections compared **using only text inside the two ERDs**; no PRD alignment and no live wiki or repo verification.*
 
 Sections:
 
-1. **Documents compared** — which two ERDs, PRD reference, option A/B if applicable.
-2. **Quantitative metrics — Table A** — **Context–PRD alignment** % and **Context relevance** % for **ERD A** and **ERD B**; include **Confidence / How obtained / Why** (extra columns or notes column).
-3. **Quantitative metrics — Table B** — **Relevance consistency** (qualitative), **Overall Step 4** %; **Confidence / How / Why** each.
-4. **PRD mapping / contradiction ledgers** — per `system_context_schema.md` (omit mention-overlap lists).
+1. **Documents compared** — which two ERDs (labels A/B), how the pair was chosen; **do not** require a PRD column for this sheet.
+2. **Quantitative metrics — pair table** — **Content similarity (System Context)** %, **Inter-ERD consistency** (qualitative), **Overall Step 3** % (= content similarity per schema); **Confidence / How obtained / Why** each.
+3. **System Context Comparison** — shared / unique lists and similarity recap (from Markdown).
+4. **Cross-ERD theme–claim ledger and contradiction ledgers** — per `system_context_schema.md` (omit mention-overlap lists).
 
 ---
 
@@ -180,7 +179,7 @@ If using **pandas** only, export then **post-process** with openpyxl for formatt
 
 ## Rules
 
-1. **All completed evaluations** appear: **Summary** plus every detail sheet for phases that ran (at most **four** detail tabs—PRD vs generated; **either** Generated vs team **or** Same delivery scope from Step 2, **or both** if the user ran Step 2 twice; Research context when Step 4 ran).
+1. **All completed evaluations** appear: **Summary** plus every detail sheet for phases that ran (at most **four** detail tabs—PRD vs generated; **either** Generated vs team **or** Same delivery scope from Step 2, **or both** if the user ran Step 2 twice; Research context when Step 3 ran).
 2. **Missing phase:** Omit that detail sheet; list what was included under metadata on **Summary**.
 3. **Source of truth:** Copy from Markdown reports in the thread; do not invent scores.
 4. **No “Step N”** on workbook faces—use the **reader-facing names** and **worksheet tab names** from the tables above (and optional banners on each sheet).

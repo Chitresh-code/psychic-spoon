@@ -1,10 +1,10 @@
-# System Context — Steps 1–2 (full or reduced scope) and Step 4
+# System Context — Steps 1–2 (full or reduced scope) and Step 3 (two ERDs)
 
 Use this schema whenever the ERD contains a **System Context** block: narrative summaries labeled as being informed by **Confluence** and/or **GitHub**, typically including tables for wiki pages (titles, space, dates, freshness, key findings) and for repositories (branch, files read, findings, tech stack, ownership).
 
 ## Hard constraint (no external verification)
 
-The evaluator has **no access to GitHub or Confluence**. Do **not** score “sourcing quality” against live repos or wiki pages. Treat all Confluence/GitHub content as **text inside the uploaded document** (DOCX or Markdown). Verification is **PRD ↔ ERD** and **ERD ↔ ERD** only.
+The evaluator has **no access to GitHub or Confluence**. Do **not** score “sourcing quality” against live repos or wiki pages. Treat all Confluence/GitHub content as **text inside the uploaded document** (DOCX or Markdown). **Step 1** uses **PRD ↔ ERD** (and System Context only for triage per `evaluation_report_schema.md`). **Step 2** uses **generated ↔ team ERD**. **Step 3** uses **ERD A ↔ ERD B** System Context text **only**—**do not** use the PRD for Step 3 metrics, tables, or ledgers.
 
 ---
 
@@ -12,7 +12,7 @@ The evaluator has **no access to GitHub or Confluence**. Do **not** score “sou
 
 ### Where it appears in reports
 
-- **Step 1:** **Do not** put System Context in the §2 numeric summary table. Summarize it in **System Context (when present)** narrative after **Counting basis** (see `evaluation_report_schema.md`). Also use System Context in **Completeness**, **Hallucination**, **Traceability**, and **Recommendations** when gaps concern context.
+- **Step 1:** **Do not** put System Context in the §2 numeric summary table. **Do not** add a **System Context (when present)** subsection or any standalone System Context narrative or dimension **%** block (see `evaluation_report_schema.md`). Use System Context **in-document text** only for **§4a / §4b** triage, **Hallucination** counting rules, and **short inline** mentions in **Completeness**, **Traceability**, or **Recommendations** when a specific gap references context.
 
 ### Hallucination triage vs System Context (Step 1)
 
@@ -23,126 +23,99 @@ When flagging **unsourced** or **hallucinated** content in **Functional / NFR / 
 3. **If** it appears in System Context: put it in **`evaluation_report_schema.md` §4b** (*Traced to System Context, not in PRD*) in the **Markdown** report, with a short pointer to where in System Context it appears, and the required disclaimer that the evaluator **cannot verify** external correctness. **Do not** count it in the **Hallucination rate** numerator; **do not** list it in §4a. **Do not** add §4b items to the Excel **`PRD_vs_generated`** sheet (that sheet lists **true hallucinations / §4a only**).
 4. **If** it appears in **neither** PRD nor System Context: treat as a **hallucination** in §4a and count it in the **Hallucination rate** numerator (subject to the usual “no IDs / boilerplate” rules in `evaluation_report_schema.md`).
 
-This does **not** remove the need to assess **unsupported or contradictory context claims** and overall fitness of the **System Context block**—only that there is **no merged % headline** in §2.
-- **Step 2 (full scope):** Treat **System Context** as the **seventh canonical section** (after E2E Testing Plan). Follow **content-first** rules per `structure_analysis_schema.md` (§8): **Content facet ledger** required; structure notes optional.
+Unsupported or contradictory context claims may still inform **§4b** and **Recommendations**; Step 1 does **not** include a separate System Context assessment section or merged % headline in §2.
+- **Step 2 (full scope):** Treat **System Context** as the **seventh canonical section** (after E2E Testing Plan). Follow **content-first** rules per `structure_analysis_schema.md` (§8): subsection metric block + reasoning required; structure notes optional.
 - **Step 2 (reduced scope):** Apply the same **scoped** rules as other sections: evaluate System Context rows/themes only inside the **declared engineering slice** (see `scope_aligned_comparison_schema.md`).
 
-### Assessment dimensions (Step 1 — System Context, narrative)
+### Assessment dimensions (Step 1 — internal triage only)
 
-Use these to write **System Context (when present)** in the Step 1 report. You may include **optional %** per dimension in prose (same formulas); there is **no** §2 table row and **no** merged score.
+These dimensions are **not** reported as a Step 1 subsection or prose **%** block. Use them **only** as private judgment to support **§4b** rows, **Recommendations**, or **inline** completeness notes when a **specific** context claim matters—without publishing a System Context audit section.
 
-All percentages **0–100** when shown. State **numerator / denominator** (or **passed / applicable**). If denominator is **0**, report **N/A** for that dimension in prose.
+| Dimension | Meaning (internal) |
+|--------|---------|
+| **Structural completeness** | Whether the block has expected subsections/tables (Confluence/GitHub style). |
+| **Context–PRD alignment** | Whether themes map to PRD requirements. |
+| **Context relevance** | Whether items are on-topic vs filler. |
+| **Unsupported / contradictory context claims** | Contradictions or major substance with no PRD basis. |
 
-| Dimension | Meaning | How to compute |
-|--------|---------|----------------|
-| **Structural completeness** | The System Context block matches the **expected shape** (subsections + tables/fields). | **Checks** (adapt to the doc): Confluence summary subsection present; GitHub summary subsection present; Confluence rows have roles for title, space, last modified, freshness, key findings; GitHub area has repo, branch, files read (or equivalent), findings; optional tech stack and ownership tables. **%** = (passed / applicable) × 100. |
-| **Context–PRD alignment** | How well **key findings and themes** in System Context **reflect** PRD requirements (capabilities, scope, dependencies, constraints, milestones). | **Denominator:** discrete context items scored (rows or themed paragraphs—state counting rule). **Numerator:** items that **map** to at least one PRD requirement/theme (cite PRD section or ID). **%** = (numerator / denominator) × 100. |
-| **Context relevance** | Whether context is **on-topic** for this program vs generic or tangential filler. | Same denominator (or documented sample). **Numerator:** items **materially relevant** to the PRD problem domain and delivery narrative. **Relevance %** = (numerator / denominator) × 100. |
-| **Unsupported / contradictory context claims** | Claims that **contradict the PRD** or add **major substance** with **no PRD basis** (no external verification required). | **Denominator:** substantive claims in System Context. **Numerator:** contradictions or unsupported major assertions. **Rate %** = (numerator / denominator) × 100. |
-
-**Confidence:** Optional **Low / Med / High** for the System Context subsection as a whole, with one reason.
-
-**Counting basis:** When you cite % in narrative, document what counted as one “context item” and one “substantive claim.”
+**Do not** output Step 1 percentages or a confidence paragraph for System Context as a whole.
 
 ### Step 2 (full scope) — System Context (seventh section)
 
 - **Reference:** Engineering ERD only. Assess **generated** against **engineering** for this block.
-- **Content-first (same as Step 2 overall):** Judge alignment using **content %** and the **Content facet ledger** only. You may note layout/column gaps briefly in narrative if they block usability; **do not** compute a separate **structure %** rollup for System Context or include structure in the Step 2 headline **Content alignment**.
-- **Content %:** **Five facets** (document which five), each **0 / 0.5 / 1**, e.g.: subsections aligned; comparable theme coverage; compatible repo/stack **names as written**; compatible ownership narrative; table/style alignment. **No** live repo/wiki verification.
-- **Ledgers:** **Content facet ledger** required; structure notes optional (short bullets if material).
+- **Content-first (same as Step 2 overall):** Judge alignment using **content %** and the subsection metric evidence only. You may note layout/column gaps briefly in narrative if they block usability; **do not** compute a separate **structure %** rollup for System Context or include structure in the Step 2 headline **Content alignment**.
+- **Content %:** Use subsection metric parameters scored **0 / 0.5 / 1** (typically 4–6 parameters). Document the parameters used, e.g.: subsections aligned; comparable theme coverage; compatible repo/stack **names as written**; compatible ownership narrative; table/style alignment. **No** live repo/wiki verification.
+- **Evidence format:** subsection metric block and reasoning block (`Metric used`, `Why this metric`, `Parameters considered`) are required. `Parameters considered` must be point-based (no table): each point includes parameter name, score, and why that parameter is used in the metric. Structure notes remain optional (short bullets if material).
 
 ### Step 2 — System Context (reduced scope / scoped)
 
-- Same **content-first** model as full-scope Step 2; **facets** only on **in-scope** System Context rows/themes per declared slice.
+- Same **content-first** model as full-scope Step 2; subsection metric parameters only on **in-scope** System Context rows/themes per declared slice.
 - **N/A** if engineering ERD has no System Context for the slice; re-normalize section averages.
 
 ### Rollups
 
-- **Step 1:** System Context has **no** numeric rollup in §2—narrative only (`evaluation_report_schema.md`).
+- **Step 1:** System Context has **no** numeric rollup in §2 and **no** dedicated narrative section (`evaluation_report_schema.md`).
 - **Step 2 (either mode):** **Content alignment** (or **Content alignment (scoped)**) rollup is the **mean** of applicable section **content %** values only (**six or seven** sections, including **System Context** when not N/A). **Do not** compute or report a separate **structural alignment** %.
 
 ---
 
-## Step 4 — Research context (two ERDs)
+## Step 3 — Research context (two ERDs)
 
-**Reader‑facing name:** **Research context (two ERDs)** (Excel tab `Context_compare`).  
-Run this step **after Step 2** (or when the user explicitly asks for Step 4 and Step 2 is already done).  
-It now **directly compares the System‑Context blocks of the two ERDs** instead of referencing the PRD.
+**Reader-facing name:** **Research context (two ERDs)** (Excel tab `Context_compare`). Internal “Step 3” replaces the former **Step 4** in operator docs.
 
-### What to do
+**When to run:** After **Step 2** completes, or when the user explicitly asks for this comparison and both ERDs are available. **Do not** require or use the **PRD** in this step—no **Context–PRD alignment**, no **Context relevance vs PRD**, no **PRD mapping** ledger. Compare **only** the **System Context** text that appears inside **ERD A** and **ERD B**.
 
-1. **Extract** the bullet‑point (or numbered) items that appear under the `## System Context` header in each uploaded ERD.  
-2. **Compute** a simple overlap set:  
-   * **Shared items** – exact lines that appear in *both* ERDs.  
-   * **Unique to ERD A** – lines that appear only in the first ERD.  
-   * **Unique to ERD B** – lines that appear only in the second ERD.  
-3. **Calculate** a Jaccard similarity score:  
-   \[
-   \text{Similarity} = \frac{|A\cap B|}{|A\cup B|}\times 100\%
-   \]
+**Pairing:** **(1)** Generated ERD vs **engineering ERD** from Step 2, and/or **(2)** vs **another** DOCX/Markdown ERD the user uploads. Label **ERD A** and **ERD B** clearly. If ambiguous, ask which two documents to compare.
 
-### System Context Comparision - required layout (Step 4)
+### Quantitative Metrics — required layout (Step 3)
 
-**Render** a Markdown subsection titled **“System Context Comparison”** placed **after** the quantitative tables (Table A/B) that already exist for Step 4. The subsection should contain a table with data:
-   * **Similarity score** (percentage).  
-   * A bullet list of **Shared items**.  
-   * A bullet list of **Unique to ERD A**.  
-   * A bullet list of **Unique to ERD B**.
+Use **one pair-level table** only (**no** per-ERD Table A). **Every row** must include **Confidence** (Low / Med / High), **How obtained** (counts, formula, or rule), and **Why** (1–2 short phrases). **Do not** cite the PRD in any formula, denominator, or rationale for Step 3.
 
-### Quantitative Metrics — required layout (Step 4)
-
-Show **scores for each ERD explicitly**, then a **small pair table**. **Every row** must include **Confidence** (Low / Med / High), **How obtained** (counts, formula, or facet sum), and **Why** (1–2 short phrases: what drives the number, what limits certainty).
-
-#### Table A — Per-ERD metrics (required)
-
-Compute **separately** for **ERD A** and **ERD B** using the **same PRD**. Use the **same definitions** as **Context–PRD alignment** and **Context relevance** in the Step 1 dimension table above (no merged headline).
-
-| Metric | ERD A (%) | ERD B (%) | Confidence | How obtained | Why |
-|--------|-----------|-----------|------------|--------------|-----|
-| **Context–PRD alignment** | … | … | Low / Med / High | Numerator/denominator per ERD; cite counting rule | e.g. thin rows on B, placeholder text |
-| **Context relevance** | … | … | Low / Med / High | Numerator/denominator per ERD | e.g. one doc mostly placeholders |
-
-Use **N/A** in an ERD column only if that ERD truly has no scorable System Context block (state why).
-
-**Derived (optional row):** **PRD alignment gap** = \|ERD A − ERD B\| percentage points on **Context–PRD alignment** (not a substitute for showing both scores).
-
-#### Table B — Pair metrics (required, slim)
+#### Pair metrics table (required)
 
 | Metric | Result | Confidence | How obtained | Why |
 |--------|--------|------------|--------------|-----|
-| **Relevance consistency (qualitative)** | e.g. Mixed — large mismatch | Low / Med / High | Compare Table A **relevance %** A vs B | short justification |
-| **Overall Step 4 score** | e.g. 72% | Low / Med / High | **Default:** arithmetic mean of the **four** Table A percentages (alignment A, alignment B, relevance A, relevance B)—exclude any **N/A** and re-normalize; **state formula** | which inputs dominated |
+| **Content similarity (System Context)** | e.g. 38% | Low / Med / High | **Default:** Jaccard on normalized lines or comparable atomic items: \(\|A \cap B\| / \|A \cup B\|\) × 100; state normalization (trim, lowercase, table cell text). Alternative: theme-level overlap if line match is misleading—**state method**. | … |
+| **Inter-ERD consistency (qualitative)** | e.g. Mixed — contradictions on repo count | Low / Med / High | Compare **claims and themes** across A and B **from the two documents only** (agree / diverge / contradict); cite example pairs | … |
+| **Overall Step 3 score** | e.g. 38% | Low / Med / High | **Default:** **same numeric value as Content similarity** % (single headline for the step—no separate per-ERD structural or substantive rates); state that explicitly in **How obtained** | … |
 
-**Do not** report **Cross-ERD thematic consistency**, **Inter-ERD consistency score**, or **Mention overlap** in chat or Excel exports for this product—those metrics were retired as low-signal. Use the **contradiction ledger** for substantive tensions between the two documents.
+If **Content similarity** is **N/A** (e.g. both System Context blocks empty), set **Overall Step 3 score** to **N/A** and explain.
 
-**Do not** replace Table A with parity-only metrics (e.g. “15% parity”) **without** also showing **ERD A** and **ERD B** **Context–PRD alignment** and **relevance** in Table A.
+**Do not** add **Structural completeness (System Context)** or **Substantive item rate (in-document)** as Step 3 metrics. **Do not** add **Context–PRD alignment**, **Context relevance (vs PRD)**, or **PRD alignment gap**.
 
-### Metric definitions (Step 4 — reference)
+**Do not** report retired low-signal pair metrics (**Cross-ERD thematic consistency**, **Inter-ERD consistency score**, **Mention overlap**) in chat or Excel. Use the **contradiction ledger** for substantive tensions.
+
+### System Context Comparison (required subsection)
+
+After the **pair metrics table**, add **“System Context Comparison”** with:
+
+- **Content similarity** (repeat % from the table is OK) plus **short** lists: **Shared** (or strongly overlapping) items, **Unique to ERD A**, **Unique to ERD B** (use normalized lines or bullet extractions; keep lists readable, not a full dump).
+
+### Metric definitions (Step 3 — reference)
 
 | Metric | Meaning | How to compute |
 |--------|---------|----------------|
-| **Context–PRD alignment** (per ERD) | Same as Step 1 dimension. | Table A: two independent percentages. |
-| **Context relevance** (per ERD) | Same as Step 1 dimension. | Table A: two independent percentages. |
-| **Overall Step 4 score** | Headline for the pair. | **Default:** mean of the four Table A % values (see Table B); **state formula**. |
+| **Content similarity (System Context)** | How much the two blocks **overlap** lexically or thematically. | Jaccard (default) or stated theme overlap; **ERD text only**. |
+| **Overall Step 3 score** | Headline numeric result for the step. | **Same as Content similarity** % unless both blocks are unscorable (**N/A**). |
 
-### Auditability (Step 4)
+### Auditability (Step 3)
 
-- **PRD mapping table:** context items vs PRD ref, note ERD A / ERD B alignment (can reference internal alignment %).
-- **Contradiction table:** claim in A, claim in B, brief note.
+- **Cross-ERD theme / claim ledger (recommended):** theme or short claim; how **ERD A** states it; how **ERD B** states it; relationship (**align** / **diverge** / **contradict**). **No PRD column.**
+- **Contradiction ledger (required where applicable):** claim in A, claim in B, brief note—**from document text only**.
 
 ### Report section order (strict)
 
-1. Step 4 Summary (documents compared, option A or B, PRD used).  
-2. **Quantitative Metrics** – the existing Table A and Table B (unchanged).  
-3. **System Context Comparison** – the new subsection described above.  
-4. PRD mapping / alignment ledger (optional but recommended).  
-5. Contradiction ledger.  
-6. Interpretation (narrative); **do not** duplicate the metric tables here—reference §2.
+1. **Step 3 summary** — ERD A and ERD B labels (filenames), how the pair was chosen; **do not** list “PRD used” for this step.
+2. **Quantitative Metrics** — pair metrics table only (content similarity, inter-ERD consistency, overall Step 3 = similarity).
+3. **System Context Comparison** — similarity + shared / unique lists.
+4. **Cross-ERD theme / claim ledger** (recommended).
+5. **Contradiction ledger**.
+6. **Interpretation** — narrative only; **do not** duplicate the metric tables; **do not** argue PRD fit.
 
 ### Confidence
 
-**Per row** in Table A and Table B: **Confidence**, **How obtained**, and **Why** are **required**—not a single global paragraph unless you also repeat overall confidence in §6 Interpretation.
+**Per row** in the pair metrics table: **Confidence**, **How obtained**, and **Why** are **required**.
 
 ---
 
-**Output:** Markdown for Step 4; follow `workflow_operations.md` for **Step 4 closing** and `xlsx_report_export.md` if Excel includes Step 4.
+**Output:** Markdown for Step 3; follow `workflow_operations.md` for **Step 3 closing** and `xlsx_report_export.md` if Excel includes **Research context (two ERDs)**.

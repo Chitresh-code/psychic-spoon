@@ -4,7 +4,7 @@ Use this schema when the user provides an **existing ERD** (**DOCX** or **Markdo
 
 **Reader-facing name:** **Generated vs team ERD** (Excel tab `Vs_team_ERD`). Use this schema for **full-scope** Step 2 only—after the scope gate in `workflow_operations.md` when the mode is **full scope** (or auto-selected full-program). For **reduced scope**, use `scope_aligned_comparison_schema.md` instead.
 
-**System Context** (seventh section): See **`system_context_schema.md`** for Step 1–2 and Step 4 metric alignment and no-external-verification rules.
+**System Context** (seventh section): See **`system_context_schema.md`** for Step 1–2 and Step 3 (two ERDs) rules and no-external-verification rules.
 
 - **Reference standard:** The **engineering ERD is the reference.** Your job is to assess **how well the generated ERD** matches it. Do not judge or assess the engineering ERD. Do not say the generated ERD is "better" or "more complete"; frame all findings as gaps or changes needed **in the generated ERD** to align with the engineering template.
 - **Content-first comparison:** Judge alignment primarily on **content**—how the engineering ERD analyzes and articulates requirements in each section, how the generated ERD compares, and what the generated ERD could adopt. **Do not** compute or report a **structural alignment %**; note layout, column, or ordering gaps **briefly in narrative** (and in recommendations) when they materially affect usability. Do not re-evaluate PRD coverage.
@@ -38,18 +38,25 @@ Use this schema when the user provides an **existing ERD** (**DOCX** or **Markdo
 
 ## Metric definitions (Step 2)
 
-Do **not** report only coarse **0 / 50 / 100** labels. Headline percentages must come from **counted bases** (content facets). You may add a **readability band** (Match / Partial / Does not match) **derived from** the section **content %** using the thresholds below.
+Do **not** report only coarse **0 / 50 / 100** labels. Headline percentages must come from **counted bases** using subsection metric parameters. You may add a **readability band** (Match / Partial / Does not match) **derived from** the section **content %** using the thresholds below.
 
 **N/A:** If a section is **absent in the engineering ERD** (e.g. no Epics table), do **not** reward the generated ERD for having more. For that section, set **content** to **N/A** and exclude from averages (re-normalize over sections that apply).
 
 ### Per-section content % (concrete basis)
 
-For each section, score **exactly five content facets** (if a facet does not apply, replace with another facet for that section and keep **five** scored items). Each facet: **1** = strong match to engineering style, **0.5** = partial, **0** = clear mismatch.
+For each section, compute one subsection metric:
 
-**Example facets (pick 5 per section, document which five in the report):**
+- **Metric name:** `Scope-aligned content score`
+- **Scale:** percentage (`0–100%`) or `N/A` when section does not apply
+- **Parameter scoring:** each parameter uses `1` (strong match), `0.5` (partial), or `0` (clear mismatch)
+- **Parameter count:** use **4–6 parameters** per section (default `5`)
 
-| Section | Facet ideas (choose 5) |
-|---------|------------------------|
+The subsection metric is the same metric that appears in the §1 per-section summary table.
+
+**Parameter ideas (pick 4–6 per section, list the chosen ones in the subsection):**
+
+| Section | Parameter ideas |
+|---------|-----------------|
 | Document Metadata | naming consistency; date/version format; program/project fields; TBD vs filled; squad/owner style |
 | Monthly Delivery Summary | scope clarity; project boundaries; assumptions; dependencies; time horizon |
 | Functional Engineering Deliverables | row granularity vs ref; Jira/ticket style; STATUS/acceptance phrasing; trace wording; deliverable naming; owner/team attribution; capability label accuracy vs PRD |
@@ -58,8 +65,9 @@ For each section, score **exactly five content facets** (if a facet does not app
 | E2E Testing Plan | scenario naming; step granularity; expected results; coverage linkage; table vs link pattern |
 | System Context | subsection alignment (Confluence vs GitHub blocks); table shapes vs ref; theme coverage vs ref; repo/stack **names as written**; ownership narrative style; freshness/labeling style |
 
-- **Content % (section)** = (sum of five facet scores / 5) × 100. Basis example: `facets 4.0/5 = 80%`.
-- In the per-section table, list **facet points** briefly (e.g. `4.0/5`) or sub-bullets for **0.5** facets.
+- **Content % (section)** = (sum of parameter scores / number of scored parameters) × 100.
+- Basis example: `parameters 2.5/5 = 50%`.
+- In the per-section table, list **parameter points** briefly (e.g. `2.5/5`).
 
 ### Rollups (headline metrics)
 
@@ -82,23 +90,37 @@ Use bands only **after** showing the **numeric %** and **basis**; bands are not 
 - **Headline Content alignment:** add **Confidence** (Low / Medium / High) and **one reason** (e.g. messy tables, Markdown vs Word table mismatch, wrong input format—PDF instead of DOCX/Markdown, minimal reference ERD).
 - **Overall confidence** in Step 2 scores (required): one sentence + Low/Medium/High.
 
-### Auditability: facet ledgers (required) and structure notes (optional)
+### Auditability: subsection metric blocks (required) and structure notes (optional)
 
-Rollup numbers alone (e.g. `2.5/5 facets`) are **not sufficient**. Readers must see **which facets** drove the score.
+Rollup numbers alone (e.g. `2.5/5 parameters`) are **not sufficient**. Readers must see which parameters drove each subsection score.
 
-**Where:** In **each** of report sections **§2–§8** (per canonical section, including **System Context**), place the **Content facet ledger** *before* the narrative bullets—**unless** that section is **N/A** (then one sentence: why no ledger; no scores).
+**Where:** In **each** of report sections **§2–§8** (including **System Context**), place the **Subsection metric block** first—unless that section is **N/A** (then one sentence: why no subsection metric).
 
-**1) Structure / layout (optional)** — no separate **structure %**. If missing columns, wrong section order, or table shape mismatches **materially** affect the generated ERD, add **up to 3 short bullets** (or a tiny table) citing concrete differences. Skip if nothing material.
+**1) Subsection metric block (required)**
 
-**2) Content facet ledger** — **exactly five** rows:
+Use the same subsection metric shown in §1 per-section summary.
 
-| Facet | Score (0 / 0.5 / 1) | Rationale (one sentence) |
-|-------|----------------------|--------------------------|
-| … | … | Why this score |
+| Metric | Result | Basis | Confidence |
+|--------|--------|-------|------------|
+| Scope-aligned content score | …% | parameters x/y | Low/Med/High |
 
-- Facet names must match the **five** facets used for the section **content %** sum.
+Then add the subsection evidence as **points** (not a table):
 
-**§1 Quantitative Metrics** keeps the **per-section content %** summary; **§2–§8** contain the **full content facet ledgers** (and optional structure bullets).
+- `Parameter: <name> | Score: <0 / 0.5 / 1> | Why used in metric: <short reason>`
+- Optional inline evidence when helpful: `Engineering signal: ...; Generated signal: ...`
+
+**2) Reasoning block (required)**
+
+- **Metric used:** Name of subsection metric in this section.
+- **Why this metric:** One sentence on why this metric is suitable for this section.
+- **Parameters considered:** Bullet points only (no table). For each parameter, include:
+  - parameter name,
+  - score (`0 / 0.5 / 1`),
+  - short description of why it was used in the metric for that subsection.
+
+**3) Structure / layout (optional)** — no separate **structure %**. If missing columns, wrong section order, or table shape mismatches **materially** affect the generated ERD, add **up to 3 short bullets** (or a tiny table) citing concrete differences. Skip if nothing material.
+
+**§1 Quantitative Metrics** keeps the per-section summary table; **§2–§8** must show metric evidence with subsection metric + point-based parameter reasoning.
 
 ---
 
@@ -123,9 +145,9 @@ Rollup numbers alone (e.g. `2.5/5 facets`) are **not sufficient**. Readers must 
 
 **Per-section scores (required):**
 
-| Section | Content % | Content basis (e.g. facet points) | Band (optional) |
+| Section | Content % | Content basis (e.g. parameter points) | Band (optional) |
 |---------|-----------|-----------------------------------|-----------------|
-| Document Metadata | …% | e.g. 4.0/5 | Match / Partial / Does not match |
+| Document Metadata | …% | e.g. 2.5/5 | Match / Partial / Does not match |
 | Monthly Delivery Summary | …% | … | … |
 | Functional Engineering Deliverables | …% | … | … |
 | Non-Functional Engineering Deliverables | …% | … | … |
@@ -137,7 +159,7 @@ Add **2–3 bullets**: interpretation (largest gaps by **numeric** gap, not only
 
 ## 2. Document Metadata
 
-**Content facet ledger** (required) → optional short **structure/layout bullets** if material → then narrative.
+**Subsection metric block** (required) → **Reasoning block** (required) → optional short **structure/layout bullets** if material → then narrative.
 
 **Structure**
 - **Reference (engineering ERD):** Describe its metadata block (e.g. PROGRAM, DOMAIN, PROJECTS, SQUAD, TRACK, STEL, Engineering Manager, Technical Lead, Architect).
@@ -151,7 +173,7 @@ Add **2–3 bullets**: interpretation (largest gaps by **numeric** gap, not only
 
 ## 3. Monthly Delivery Summary
 
-**Content facet ledger** (required) → optional short **structure/layout bullets** if material → then narrative.
+**Subsection metric block** (required) → **Reasoning block** (required) → optional short **structure/layout bullets** if material → then narrative.
 
 **Structure**
 - **Reference (engineering ERD):** How is this section structured (e.g. single paragraph vs project-by-project blocks)?
@@ -164,7 +186,7 @@ Add **2–3 bullets**: interpretation (largest gaps by **numeric** gap, not only
 
 ## 4. Functional Engineering Deliverables
 
-**Content facet ledger** (required) → optional short **structure/layout bullets** if material → then narrative.
+**Subsection metric block** (required) → **Reasoning block** (required) → optional short **structure/layout bullets** if material → then narrative.
 
 **Structure**
 - **Reference (engineering ERD):** Table columns and order (e.g. CAPABILITY | FUNCTIONAL ENGINEERING DELIVERABLES | STATUS | DESCRIPTION).
@@ -180,7 +202,7 @@ Add **2–3 bullets**: interpretation (largest gaps by **numeric** gap, not only
 
 ## 5. Non-Functional Engineering Deliverables
 
-**Content facet ledger** (required) → optional short **structure/layout bullets** if material → then narrative.
+**Subsection metric block** (required) → **Reasoning block** (required) → optional short **structure/layout bullets** if material → then narrative.
 
 **Structure**
 - **Reference (engineering ERD):** Table columns and order.
@@ -194,7 +216,7 @@ Add **2–3 bullets**: interpretation (largest gaps by **numeric** gap, not only
 
 ## 6. Engineering Epics
 
-If **N/A** (no comparable reference section): state why; **no ledgers**. Otherwise: **Content facet ledger** (required) → optional structure bullets → narrative.
+If **N/A** (no comparable reference section): state why; **no subsection metric block**. Otherwise: **Subsection metric block** (required) → **Reasoning block** (required) → optional structure bullets → narrative.
 
 **Structure**
 - **Reference (engineering ERD):** Does it have a dedicated Epics section/table? If yes, column names and order. If no, state that the engineering ERD does not use a separate Epics table.
@@ -207,7 +229,7 @@ If **N/A** (no comparable reference section): state why; **no ledgers**. Otherwi
 
 ## 7. E2E Testing Plan
 
-**Content facet ledger** (required) → optional short **structure/layout bullets** if material → then narrative.
+**Subsection metric block** (required) → **Reasoning block** (required) → optional short **structure/layout bullets** if material → then narrative.
 
 **Structure**
 - **Reference (engineering ERD):** How is this section presented (e.g. full table vs link to wiki)?
@@ -220,7 +242,7 @@ If **N/A** (no comparable reference section): state why; **no ledgers**. Otherwi
 
 ## 8. System Context
 
-If **N/A** (no comparable System Context in the engineering ERD and no generated block to compare): state why; **no ledgers**. Otherwise: **Content facet ledger** (required) → optional structure bullets → narrative. Full metric definitions: **`system_context_schema.md`**.
+If **N/A** (no comparable System Context in the engineering ERD and no generated block to compare): state why; **no subsection metric block**. Otherwise: **Subsection metric block** (required) → **Reasoning block** (required) → optional structure bullets → narrative. Full metric definitions: **`system_context_schema.md`**.
 
 **Structure**
 - **Reference (engineering ERD):** Confluence/GitHub summary subsections, table shapes, column roles.
@@ -250,7 +272,7 @@ These recommendations address common ERD quality gaps that engineering teams con
 
 ## Relationship to reduced scope (same delivery scope)
 
-This schema compares **entire documents** (strict). If the **engineering ERD only covers a subset of the PRD** while the **generated ERD reflects broader PRD scope**, whole-document scores can be **misleadingly low**. **Before** running this analysis, follow `workflow_operations.md`: infer coverage vs PRD; if partial, give a **short** coverage list and let the user choose **full scope** (this schema) or **reduced scope** (`scope_aligned_comparison_schema.md`—same **content-first** model and **five facets**, but **scoped slice + lenient constraints**).
+This schema compares **entire documents** (strict). If the **engineering ERD only covers a subset of the PRD** while the **generated ERD reflects broader PRD scope**, whole-document scores can be **misleadingly low**. **Before** running this analysis, follow `workflow_operations.md`: infer coverage vs PRD; if partial, give a **short** coverage list and let the user choose **full scope** (this schema) or **reduced scope** (`scope_aligned_comparison_schema.md`—same **content-first** model via subsection metric parameters, but **scoped slice + lenient constraints**).
 
 ---
 
