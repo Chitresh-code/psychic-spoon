@@ -24,7 +24,7 @@ When flagging **unsourced** or **hallucinated** content in **Functional / NFR / 
 4. **If** it appears in **neither** PRD nor System Context: treat as a **hallucination** in §4a and count it in the **Hallucination rate** numerator (subject to the usual “no IDs / boilerplate” rules in `evaluation_report_schema.md`).
 
 Unsupported or contradictory context claims may still inform **§4b** and **Recommendations**; Step 1 does **not** include a separate System Context assessment section or merged % headline in §2.
-- **Step 2 (full scope):** Treat **System Context** as the **seventh canonical section** (after E2E Testing Plan). Follow **content-first** rules per `structure_analysis_schema.md` (§8): subsection metric block + reasoning required; structure notes optional.
+- **Step 2 (full scope):** Treat **System Context** as the **seventh canonical section** (after E2E Testing Plan). Follow **content-first** rules per `structure_analysis_schema.md` (§8): **alignment score** + **two bullet subsections** required; structure notes optional.
 - **Step 2 (reduced scope):** Apply the same **scoped** rules as other sections: evaluate System Context rows/themes only inside the **declared engineering slice** (see `scope_aligned_comparison_schema.md`).
 
 ### Assessment dimensions (Step 1 — internal triage only)
@@ -42,14 +42,15 @@ These dimensions are **not** reported as a Step 1 subsection or prose **%** bloc
 
 ### Step 2 (full scope) — System Context (seventh section)
 
+- **Fidelity:** Compare **only** text that appears **inside** the two uploaded ERDs. **Do not** invent wiki/repo facts, URLs, or findings not written in the documents; if a block is empty or missing, say so (see **`structure_analysis_schema.md`** — *Fidelity — no hallucination or padding*).
 - **Reference:** Engineering ERD only. Assess **generated** against **engineering** for this block.
-- **Content-first (same as Step 2 overall):** Judge alignment using **content %** and the subsection metric evidence only. You may note layout/column gaps briefly in narrative if they block usability; **do not** compute a separate **structure %** rollup for System Context or include structure in the Step 2 headline **Content alignment**.
-- **Content %:** Use subsection metric parameters scored **0 / 0.5 / 1** (typically 4–6 parameters). Document the parameters used, e.g.: subsections aligned; comparable theme coverage; compatible repo/stack **names as written**; compatible ownership narrative; table/style alignment. **No** live repo/wiki verification.
-- **Evidence format:** subsection metric block and reasoning block (`Metric used`, `Why this metric`, `Parameters considered`) are required. `Parameters considered` must be point-based (no table): each point includes parameter name, score, and why that parameter is used in the metric. Structure notes remain optional (short bullets if material).
+- **Content-first (same as Step 2 overall):** Judge alignment using **content %** and the **alignment score + two bullet subsections** for this section. You may note layout/column gaps briefly in narrative if they block usability; **do not** compute a separate **structure %** rollup for System Context or include structure in the Step 2 headline **Content alignment**.
+- **Content %:** Use the same internal comparison-check rubric as other Step 2 sections (**0 / 0.5 / 1** per check, typically **4–6** checks). **Do not** list individual check names or scores in the Markdown report—only **alignment score** % and **basis** (x/y). **No** live repo/wiki verification.
+- **Evidence format:** **Alignment score** + **two bullet subsections** per `structure_analysis_schema.md` (**Same in both ERDs**; **Engineering includes; generated misses or underplays**). **Do not** output **Metric used**, **Why this metric**, **Parameters considered**, or **Scope-aligned content score**. Structure notes remain optional (short bullets if material).
 
 ### Step 2 — System Context (reduced scope / scoped)
 
-- Same **content-first** model as full-scope Step 2; subsection metric parameters only on **in-scope** System Context rows/themes per declared slice.
+- Same **content-first** model as full-scope Step 2; apply the internal check rubric only on **in-scope** System Context rows/themes per declared slice.
 - **N/A** if engineering ERD has no System Context for the slice; re-normalize section averages.
 
 ### Rollups
@@ -73,13 +74,12 @@ Use **one pair-level table** only (**no** per-ERD Table A). **Every row** must i
 
 #### Pair metrics table (required)
 
+Use **exactly two scored rows** in this table—**do not** add **Overall Step 3 score** or any other headline % that duplicates **Content similarity** (that duplicate confuses readers in chat and Excel).
+
 | Metric | Result | Confidence | How obtained | Why |
 |--------|--------|------------|--------------|-----|
-| **Content similarity (System Context)** | e.g. 38% | Low / Med / High | **Default:** Jaccard on normalized lines or comparable atomic items: \(\|A \cap B\| / \|A \cup B\|\) × 100; state normalization (trim, lowercase, table cell text). Alternative: theme-level overlap if line match is misleading—**state method**. | … |
+| **Content similarity (System Context)** | e.g. 38% or N/A | Low / Med / High | **Default:** Jaccard on normalized lines or comparable atomic items: \(\|A \cap B\| / \|A \cup B\|\) × 100; state normalization (trim, lowercase, table cell text). Alternative: theme-level overlap if line match is misleading—**state method**. If both blocks empty or unscorable, **N/A** with reason. | … |
 | **Inter-ERD consistency (qualitative)** | e.g. Mixed — contradictions on repo count | Low / Med / High | Compare **claims and themes** across A and B **from the two documents only** (agree / diverge / contradict); cite example pairs | … |
-| **Overall Step 3 score** | e.g. 38% | Low / Med / High | **Default:** **same numeric value as Content similarity** % (single headline for the step—no separate per-ERD structural or substantive rates); state that explicitly in **How obtained** | … |
-
-If **Content similarity** is **N/A** (e.g. both System Context blocks empty), set **Overall Step 3 score** to **N/A** and explain.
 
 **Do not** add **Structural completeness (System Context)** or **Substantive item rate (in-document)** as Step 3 metrics. **Do not** add **Context–PRD alignment**, **Context relevance (vs PRD)**, or **PRD alignment gap**.
 
@@ -95,8 +95,8 @@ After the **pair metrics table**, add **“System Context Comparison”** with:
 
 | Metric | Meaning | How to compute |
 |--------|---------|----------------|
-| **Content similarity (System Context)** | How much the two blocks **overlap** lexically or thematically. | Jaccard (default) or stated theme overlap; **ERD text only**. |
-| **Overall Step 3 score** | Headline numeric result for the step. | **Same as Content similarity** % unless both blocks are unscorable (**N/A**). |
+| **Content similarity (System Context)** | How much the two blocks **overlap** lexically or thematically; the **only** numeric headline for this step. | Jaccard (default) or stated theme overlap; **ERD text only**. |
+| **Inter-ERD consistency (qualitative)** | Whether the two System Context narratives **agree, diverge, or contradict** on substantive themes (no second numeric rollup). | Document-pair review only; use the **contradiction ledger** for tensions. |
 
 ### Auditability (Step 3)
 
@@ -106,7 +106,7 @@ After the **pair metrics table**, add **“System Context Comparison”** with:
 ### Report section order (strict)
 
 1. **Step 3 summary** — ERD A and ERD B labels (filenames), how the pair was chosen; **do not** list “PRD used” for this step.
-2. **Quantitative Metrics** — pair metrics table only (content similarity, inter-ERD consistency, overall Step 3 = similarity).
+2. **Quantitative Metrics** — pair metrics table only (**Content similarity**, **Inter-ERD consistency** qualitative)—**no** duplicate “overall” % row.
 3. **System Context Comparison** — similarity + shared / unique lists.
 4. **Cross-ERD theme / claim ledger** (recommended).
 5. **Contradiction ledger**.

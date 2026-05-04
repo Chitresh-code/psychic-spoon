@@ -2,13 +2,20 @@
 
 Use this schema when the user provides an **existing ERD** (**DOCX** or **Markdown**) from the engineering team.
 
-**Reader-facing name:** **Generated vs team ERD** (Excel tab `Vs_team_ERD`). Use this schema for **full-scope** Step 2 only—after the scope gate in `workflow_operations.md` when the mode is **full scope** (or auto-selected full-program). For **reduced scope**, use `scope_aligned_comparison_schema.md` instead.
+**Reader-facing name:** **Generated vs team ERD** (Excel worksheet tab **`generated_vs_team_erd`** — same tab as reduced scope; see `xlsx_report_export.md` for the **unified** reduced-format Excel layout; only the **Scope** narrative differs by mode). Use this schema for **full-scope** Step 2 only—after the scope gate in `workflow_operations.md` when the mode is **full scope** (or auto-selected full-program). For **reduced scope**, use `scope_aligned_comparison_schema.md` instead.
 
 **System Context** (seventh section): See **`system_context_schema.md`** for Step 1–2 and Step 3 (two ERDs) rules and no-external-verification rules.
 
 - **Reference standard:** The **engineering ERD is the reference.** Your job is to assess **how well the generated ERD** matches it. Do not judge or assess the engineering ERD. Do not say the generated ERD is "better" or "more complete"; frame all findings as gaps or changes needed **in the generated ERD** to align with the engineering template.
 - **Content-first comparison:** Judge alignment primarily on **content**—how the engineering ERD analyzes and articulates requirements in each section, how the generated ERD compares, and what the generated ERD could adopt. **Do not** compute or report a **structural alignment %**; note layout, column, or ordering gaps **briefly in narrative** (and in recommendations) when they materially affect usability. Do not re-evaluate PRD coverage.
 - **System Context:** When present, evaluate per **`system_context_schema.md`** (seventh canonical section). **No** live GitHub or Confluence verification.
+
+### Fidelity — no hallucination or padding (required)
+
+- **Source of truth:** Only the **uploaded** engineering ERD and **uploaded** generated ERD for this step. **Do not** infer missing pages, unseen attachments, or “what the team surely meant.”
+- **Missing or empty sections:** If either document **lacks** a comparable section (or it is effectively **blank** / **TBD only**), state that in plain language, apply **N/A** to the section score when the schema says to, and **do not** fabricate alignment bullets, gaps, or numeric bases. **Do not** invent checks or scores to reach a tidy `x/y`.
+- **Bullet lists (“Same in both” / “Engineering includes; generated misses”):** Each bullet must rest on **concrete wording or structure you actually saw** in the documents. If there is **nothing substantive** to list under a heading, use **one** honest bullet (e.g. **No substantive overlap to report from the source text in this section**) or **Nothing identified in the engineering ERD for this subsection**—**not** placeholder examples, generic best practices, or made-up row titles.
+- **Recommendations (§9):** Only recommend changes that follow from **documented** gaps or misalignment. If the only issue is “section absent,” recommend **adding or labeling** that section—not fictional content to fill it.
 
 ## Canonical ERD sections (in order)
 
@@ -38,24 +45,22 @@ Use this schema when the user provides an **existing ERD** (**DOCX** or **Markdo
 
 ## Metric definitions (Step 2)
 
-Do **not** report only coarse **0 / 50 / 100** labels. Headline percentages must come from **counted bases** using subsection metric parameters. You may add a **readability band** (Match / Partial / Does not match) **derived from** the section **content %** using the thresholds below.
+Do **not** report only coarse **0 / 50 / 100** labels. Headline percentages must come from **counted bases** using the internal comparison-check rubric (sum / count). You may add a **readability band** (Match / Partial / Does not match) **derived from** the section **content %** using the thresholds below.
 
 **N/A:** If a section is **absent in the engineering ERD** (e.g. no Epics table), do **not** reward the generated ERD for having more. For that section, set **content** to **N/A** and exclude from averages (re-normalize over sections that apply).
 
 ### Per-section content % (concrete basis)
 
-For each section, compute one subsection metric:
+For each section, compute one **alignment score** (same math as before; internal rubric only):
 
-- **Metric name:** `Scope-aligned content score`
 - **Scale:** percentage (`0–100%`) or `N/A` when section does not apply
-- **Parameter scoring:** each parameter uses `1` (strong match), `0.5` (partial), or `0` (clear mismatch)
-- **Parameter count:** use **4–6 parameters** per section (default `5`)
+- **Scoring:** use **4–6 internal comparison checks** per section (default `5`); each check scores `1` (strong match), `0.5` (partial), or `0` (clear mismatch). **Do not** publish the check names or per-check scores in the Markdown report—only the rollup **%** and **basis** (e.g. `3.0/5`).
 
-The subsection metric is the same metric that appears in the §1 per-section summary table.
+The alignment score is what appears in the §1 per-section summary table (**Content %** column).
 
-**Parameter ideas (pick 4–6 per section, list the chosen ones in the subsection):**
+**Comparison check ideas** (pick **4–6** per section **internally**; do **not** list individual check names or scores in the Markdown report):
 
-| Section | Parameter ideas |
+| Section | Internal check ideas |
 |---------|-----------------|
 | Document Metadata | naming consistency; date/version format; program/project fields; TBD vs filled; squad/owner style |
 | Monthly Delivery Summary | scope clarity; project boundaries; assumptions; dependencies; time horizon |
@@ -65,9 +70,9 @@ The subsection metric is the same metric that appears in the §1 per-section sum
 | E2E Testing Plan | scenario naming; step granularity; expected results; coverage linkage; table vs link pattern |
 | System Context | subsection alignment (Confluence vs GitHub blocks); table shapes vs ref; theme coverage vs ref; repo/stack **names as written**; ownership narrative style; freshness/labeling style |
 
-- **Content % (section)** = (sum of parameter scores / number of scored parameters) × 100.
-- Basis example: `parameters 2.5/5 = 50%`.
-- In the per-section table, list **parameter points** briefly (e.g. `2.5/5`).
+- **Content % (section)** = (sum of internal check scores / number of checks) × 100.
+- Basis example: `3.0/5 = 60%` (show only the fraction in tables and section headers, not each check).
+- In the per-section summary table, list the **basis** briefly (e.g. `2.5/5`).
 
 ### Rollups (headline metrics)
 
@@ -90,37 +95,37 @@ Use bands only **after** showing the **numeric %** and **basis**; bands are not 
 - **Headline Content alignment:** add **Confidence** (Low / Medium / High) and **one reason** (e.g. messy tables, Markdown vs Word table mismatch, wrong input format—PDF instead of DOCX/Markdown, minimal reference ERD).
 - **Overall confidence** in Step 2 scores (required): one sentence + Low/Medium/High.
 
-### Auditability: subsection metric blocks (required) and structure notes (optional)
+### Auditability: section analysis (required) and structure notes (optional)
 
-Rollup numbers alone (e.g. `2.5/5 parameters`) are **not sufficient**. Readers must see which parameters drove each subsection score.
+Rollup numbers alone (e.g. `2.5/5`) are **not sufficient** for readers—each §2–§8 needs the **score + two comparison lists** below.
 
-**Where:** In **each** of report sections **§2–§8** (including **System Context**), place the **Subsection metric block** first—unless that section is **N/A** (then one sentence: why no subsection metric).
+**Where:** In **each** of report sections **§2–§8** (including **System Context**), unless that section is **N/A** (then one sentence: why no score).
 
-**1) Subsection metric block (required)**
+**1) Alignment score (required)**
 
-Use the same subsection metric shown in §1 per-section summary.
+One short block (plain sentences or a single line—**no** table for this block):
 
-| Metric | Result | Basis | Confidence |
-|--------|--------|-------|------------|
-| Scope-aligned content score | …% | parameters x/y | Low/Med/High |
+- **Alignment score:** …% (basis: **x/y**, the sum of internal comparison checks over **y** checks—same internal rubric as **Comparison check ideas** in **Metric definitions** above). If you **cannot** score honestly (e.g. no reference text), use **N/A** for the section per schema rules—**do not** assign a fake percentage.
+- **Confidence:** Low / Med / High (optional one phrase).
 
-Then add the subsection evidence as **points** (not a table):
+**Do not** output headings or labels **Metric used**, **Why this metric**, **Scope-aligned content score**, or **Parameters considered**. Do **not** enumerate each internal check name with its 0 / 0.5 / 1 score.
 
-- `Parameter: <name> | Score: <0 / 0.5 / 1> | Why used in metric: <short reason>`
-- Optional inline evidence when helpful: `Engineering signal: ...; Generated signal: ...`
+**2) Section comparison — two subsections (required, bullet lists only)**
 
-**2) Reasoning block (required)**
+Use **Markdown bullets only** (no tables). Keep each list tight and concrete.
 
-- **Metric used:** Name of subsection metric in this section.
-- **Why this metric:** One sentence on why this metric is suitable for this section.
-- **Parameters considered:** Bullet points only (no table). For each parameter, include:
-  - parameter name,
-  - score (`0 / 0.5 / 1`),
-  - short description of why it was used in the metric for that subsection.
+1. **Same in both ERDs** — what aligns in substance, naming, or intent for this section.
+2. **Engineering ERD includes; generated ERD misses or underplays** — gaps the **generated** ERD should close to match the reference.
 
-**3) Structure / layout (optional)** — no separate **structure %**. If missing columns, wrong section order, or table shape mismatches **materially** affect the generated ERD, add **up to 3 short bullets** (or a tiny table) citing concrete differences. Skip if nothing material.
+If a list truly has **no** document-grounded items, a **single** bullet such as **None identified from the source documents** (or **Engineering ERD has no comparable content here**) is required—**not** invented items to look thorough.
 
-**§1 Quantitative Metrics** keeps the per-section summary table; **§2–§8** must show metric evidence with subsection metric + point-based parameter reasoning.
+Treat **alignment score** + these **two lists** as the three reader-facing parts of each section (score + subsection A + subsection B)—**no** separate parameter tables.
+
+**3) Structure / layout (optional)** — no separate **structure %**. If missing columns, wrong section order, or table shape mismatches **materially** affect the generated ERD, add **up to 3 short bullets** citing concrete differences. Skip if nothing material.
+
+**4) Short narrative (optional)** — one short paragraph if it helps tie the bullets to **Suggestions for generated ERD** themes from each section’s guidance below.
+
+**§1 Quantitative Metrics** keeps the per-section summary table; **§2–§8** must show **alignment score + two bullet subsections** (and optional structure bullets / narrative).
 
 ---
 
@@ -145,7 +150,7 @@ Then add the subsection evidence as **points** (not a table):
 
 **Per-section scores (required):**
 
-| Section | Content % | Content basis (e.g. parameter points) | Band (optional) |
+| Section | Content % | Content basis (x/y checks) | Band (optional) |
 |---------|-----------|-----------------------------------|-----------------|
 | Document Metadata | …% | e.g. 2.5/5 | Match / Partial / Does not match |
 | Monthly Delivery Summary | …% | … | … |
@@ -159,7 +164,7 @@ Add **2–3 bullets**: interpretation (largest gaps by **numeric** gap, not only
 
 ## 2. Document Metadata
 
-**Subsection metric block** (required) → **Reasoning block** (required) → optional short **structure/layout bullets** if material → then narrative.
+**Alignment score** + **two bullet subsections** (required) → optional **structure/layout bullets** → optional short narrative.
 
 **Structure**
 - **Reference (engineering ERD):** Describe its metadata block (e.g. PROGRAM, DOMAIN, PROJECTS, SQUAD, TRACK, STEL, Engineering Manager, Technical Lead, Architect).
@@ -173,7 +178,7 @@ Add **2–3 bullets**: interpretation (largest gaps by **numeric** gap, not only
 
 ## 3. Monthly Delivery Summary
 
-**Subsection metric block** (required) → **Reasoning block** (required) → optional short **structure/layout bullets** if material → then narrative.
+**Alignment score** + **two bullet subsections** (required) → optional **structure/layout bullets** → optional short narrative.
 
 **Structure**
 - **Reference (engineering ERD):** How is this section structured (e.g. single paragraph vs project-by-project blocks)?
@@ -186,7 +191,7 @@ Add **2–3 bullets**: interpretation (largest gaps by **numeric** gap, not only
 
 ## 4. Functional Engineering Deliverables
 
-**Subsection metric block** (required) → **Reasoning block** (required) → optional short **structure/layout bullets** if material → then narrative.
+**Alignment score** + **two bullet subsections** (required) → optional **structure/layout bullets** → optional short narrative.
 
 **Structure**
 - **Reference (engineering ERD):** Table columns and order (e.g. CAPABILITY | FUNCTIONAL ENGINEERING DELIVERABLES | STATUS | DESCRIPTION).
@@ -202,7 +207,7 @@ Add **2–3 bullets**: interpretation (largest gaps by **numeric** gap, not only
 
 ## 5. Non-Functional Engineering Deliverables
 
-**Subsection metric block** (required) → **Reasoning block** (required) → optional short **structure/layout bullets** if material → then narrative.
+**Alignment score** + **two bullet subsections** (required) → optional **structure/layout bullets** → optional short narrative.
 
 **Structure**
 - **Reference (engineering ERD):** Table columns and order.
@@ -216,7 +221,7 @@ Add **2–3 bullets**: interpretation (largest gaps by **numeric** gap, not only
 
 ## 6. Engineering Epics
 
-If **N/A** (no comparable reference section): state why; **no subsection metric block**. Otherwise: **Subsection metric block** (required) → **Reasoning block** (required) → optional structure bullets → narrative.
+If **N/A** (no comparable reference section): state why; **no alignment score**. Otherwise: **Alignment score** + **two bullet subsections** (required) → optional structure bullets → optional narrative.
 
 **Structure**
 - **Reference (engineering ERD):** Does it have a dedicated Epics section/table? If yes, column names and order. If no, state that the engineering ERD does not use a separate Epics table.
@@ -229,7 +234,7 @@ If **N/A** (no comparable reference section): state why; **no subsection metric 
 
 ## 7. E2E Testing Plan
 
-**Subsection metric block** (required) → **Reasoning block** (required) → optional short **structure/layout bullets** if material → then narrative.
+**Alignment score** + **two bullet subsections** (required) → optional **structure/layout bullets** → optional short narrative.
 
 **Structure**
 - **Reference (engineering ERD):** How is this section presented (e.g. full table vs link to wiki)?
@@ -242,7 +247,7 @@ If **N/A** (no comparable reference section): state why; **no subsection metric 
 
 ## 8. System Context
 
-If **N/A** (no comparable System Context in the engineering ERD and no generated block to compare): state why; **no subsection metric block**. Otherwise: **Subsection metric block** (required) → **Reasoning block** (required) → optional structure bullets → narrative. Full metric definitions: **`system_context_schema.md`**.
+If **N/A** (no comparable System Context in the engineering ERD and no generated block to compare): state why; **no alignment score**. Otherwise: **Alignment score** + **two bullet subsections** (required) → optional structure bullets → optional narrative. Full rules: **`system_context_schema.md`**.
 
 **Structure**
 - **Reference (engineering ERD):** Confluence/GitHub summary subsections, table shapes, column roles.
@@ -272,7 +277,7 @@ These recommendations address common ERD quality gaps that engineering teams con
 
 ## Relationship to reduced scope (same delivery scope)
 
-This schema compares **entire documents** (strict). If the **engineering ERD only covers a subset of the PRD** while the **generated ERD reflects broader PRD scope**, whole-document scores can be **misleadingly low**. **Before** running this analysis, follow `workflow_operations.md`: infer coverage vs PRD; if partial, give a **short** coverage list and let the user choose **full scope** (this schema) or **reduced scope** (`scope_aligned_comparison_schema.md`—same **content-first** model via subsection metric parameters, but **scoped slice + lenient constraints**).
+This schema compares **entire documents** (strict). If the **engineering ERD only covers a subset of the PRD** while the **generated ERD reflects broader PRD scope**, whole-document scores can be **misleadingly low**. **Before** running this analysis, follow `workflow_operations.md`: infer coverage vs PRD; if partial, give a **short** coverage list and let the user choose **full scope** (this schema) or **reduced scope** (`scope_aligned_comparison_schema.md`—same **content-first** model and **alignment score** math, but **scoped slice + lenient constraints**).
 
 ---
 

@@ -37,7 +37,7 @@ Every POST uses the same **`WorkbookSheetPayload`** body:
 | `Eng_ERD_Comparison` | `engineeringErdComparison` | Eng_ERD_Comparison |
 | `Scoped_Alignment` | `scopedAlignmentReview` | Scoped_Alignment |
 | `System_Context_Comp` | `systemContextComparison` | System_Context_Comp |
-| `Recommendations` | `recommendations` (array) | Consolidated recommendations (not a separate Excel tab; use this name for the final list POST) |
+| `Recommendations` | `recommendations` (array) | Consolidated recommendations: same content as the manual Excel tab **`Recommendations`** (`xlsx_report_export.md`); use this `sheetName` for the final list POST |
 
 **Inactive keys:** Leave them **out of the JSON** (preferred). Do not duplicate `null` for every unused key unless your client requires it.
 
@@ -75,7 +75,7 @@ Use the **same** `projectSlug` and `reportDate` on every call in one session.
 | **Eng_ERD_Comparison** | `sheetName` `Eng_ERD_Comparison` → `engineeringErdComparison` |
 | **Scoped_Alignment** | `sheetName` `Scoped_Alignment` → `scopedAlignmentReview` |
 | **System_Context_Comp** | `sheetName` `System_Context_Comp` → `systemContextComparison` |
-| Consolidated recommendations | `sheetName` `Recommendations` → `recommendations` |
+| **`Recommendations`** (Excel tab + JSON) | `sheetName` `Recommendations` → `recommendations` |
 
 **Where numeric scores live:** Same as before — e.g. `prdAnalysis.metrics[].resultPercent`, `engineeringErdComparison.headlineMetrics`, `systemContextComparison.perErdMetrics` / `crossErdMetrics`.
 
@@ -83,7 +83,7 @@ Use the **same** `projectSlug` and `reportDate` on every call in one session.
 
 ## Hard content rules
 
-1. **Use exact scores from the Markdown report.** Copy metric values, basis counts, and confidence levels verbatim. Do not round, paraphrase, or approximate.
+1. **Use exact scores from the Markdown report.** Copy metric values, basis counts, and confidence levels verbatim. Do not round, paraphrase, or approximate. **Do not** invent `contentFacets`, gaps, or bullets that are not in the Markdown report.
 2. **Keep individual field values short.** Descriptions ≤ 200 characters. Rationales and reasons ≤ 150 characters. Summaries ≤ 400 characters. If a finding is longer, split across the `description` and `reason` fields or truncate the detail (the full report lives in the Markdown; JSON is structured data, not prose).
 3. **Use -1 for N/A percentages.** When a metric is not applicable, set `resultPercent`, `structurePercent`, `contentPercent`, `erdAPercent`, or `erdBPercent` to **-1** (not null, not an empty string). Add `"N/A"` in the `basis` or `why` field with a short reason.
 4. **Empty arrays for clean findings.** When there are no gaps, no hallucinations, no misclassifications, etc., send an **empty array** `[]` — not null, not a missing key.
@@ -187,10 +187,7 @@ From §1 Structure and Content Summary: overall structure match, one-liner, cont
 
 ### `headlineMetrics`
 
-Exactly three `MetricRow` objects from the §1 headline table:
-1. Structural alignment
-2. Content alignment
-3. Combined engineering alignment
+One or more `MetricRow` objects from the Step 2 §1 headline **Quantitative Metrics** table—typically **Content alignment** (or **Content alignment (scoped)**) as the primary row. Omit legacy metrics not present in the Markdown report.
 
 ### `sectionScores`
 
@@ -205,7 +202,7 @@ Collect **all** structure check ledger rows from **§2 through §8** into one fl
 
 ### `contentFacets` (flat array)
 
-Collect **all** content facet ledger rows from **§2 through §8** into one flat array. Each row carries its `section` name. Exactly 5 facets per scored section (skip N/A sections).
+Collect **bullets** from the Step 2 Markdown **two bullet subsections** per section (**Same in both ERDs**; **Engineering includes; generated misses**). For each bullet (truncate to schema length limits), one `ContentFacet`: `section` = canonical section name; `facet` = **`Same in both`** or **`Engineering not in generated`** (match the subsection); `score` = **1** (informational placeholder—the OpenAPI enum requires 0 / 0.5 / 1); `rationale` = bullet text. Skip **N/A** sections. If a subsection is empty, emit no rows for it. **Do not** emit per-parameter `Parameters considered` rows.
 
 ---
 
@@ -235,7 +232,7 @@ ERD labels, option (A or B), confidence. **Do not** require PRD filename for thi
 
 ### `crossErdMetrics`
 
-One row per metric in the Step 3 **pair metrics** table (content similarity, inter-ERD consistency, overall Step 3). `result` is a string (percentage or qualitative label).
+One row per metric in the Step 3 **pair metrics** table—**only** **Content similarity (System Context)** and **Inter-ERD consistency (qualitative)** (see `system_context_schema.md`; **no** duplicate “Overall Step 3” row). `result` is a string (percentage or qualitative label).
 
 ### `contradictions`
 

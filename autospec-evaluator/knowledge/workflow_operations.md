@@ -29,7 +29,7 @@ Use these templates (paraphrase the em-dash text if needed; **keep the bold cues
 
 Step 2 always ends with **one** delivered comparison: either **full scope** (whole documents → reader name **Generated vs team ERD**) or **reduced scope** (**Same delivery scope** / overlap slice). Include the bullets below.
 
-- **Generate report** — Produce the Excel workbook for **all evaluations so far** for **manual download** (see `xlsx_report_export.md`: **`Vs_team_ERD`** after **full scope**; **`Same_scope`** after **reduced scope**—not both unless the user ran Step 2 twice with different scope choices). Say **generate report**, **Excel export**, or **download xlsx**.
+- **Generate report** — Produce the Excel workbook for **all evaluations so far** for **manual download** (see `xlsx_report_export.md`: **one** tab **`generated_vs_team_erd`** for Step 2—**stack** **Pass 1** / **Pass 2** blocks on that tab if the user ran Step 2 twice with different scope choices). Say **generate report**, **Excel export**, or **download xlsx**.
 - **Upload report to SharePoint** — Submit completed evaluation data as **structured JSON** via **`submitEvaluationReport`**. Say **upload to SharePoint**, **push report to SharePoint**, or **send the report to SharePoint**. *Only if the action is connected; otherwise omit.*
 - **Step 3** — Run **research context (two ERDs)** only (compare **System Context** in two **DOCX/Markdown** ERDs **using in-document text only**—no PRD scoring). Engineering ERD from Step 2 and/or another upload. Say **Step 3**, **compare context**, **research context**, or legacy **Step 4**.
 
@@ -51,7 +51,7 @@ If the user has **only** completed Step 1 and just received a workbook, offer a 
 
 If the user has completed Step 2 but **not** Step 3 and just received a workbook, remind them they can run **Step 3** (**Research context (two ERDs)**) before the next export if they want that analysis (one line + optional repeat of the **Step 3** bullet from **After Step 2**).
 
-If they want the **other** Step 2 mode (full vs reduced) after already finishing one pass, they can **upload the team ERD again** (or say they want the alternate scope) and complete the scope gate again—exports can include both detail sheets only if both passes completed in the session.
+If they want the **other** Step 2 mode (full vs reduced) after already finishing one pass, they can **upload the team ERD again** (or say they want the alternate scope) and complete the scope gate again—exports place **both** Markdown reports on the **same** **`generated_vs_team_erd`** tab (**Pass 1** / **Pass 2**) when both passes completed in the session.
 
 ---
 
@@ -67,7 +67,7 @@ If they want the **other** Step 2 mode (full vs reduced) after already finishing
 
 **Step 1 closing:** Append **What would you like to do next?** and the **After Step 1** option list from **Explicit next-step options** above (do not omit).
 
-**Excel export:** If the user asks for export after Step 1 only, build the workbook per `xlsx_report_export.md`: **`Summary`** + **`PRD_vs_generated`** (max 2 sheets until more evaluations complete). Later exports follow `xlsx_report_export.md` (**≤4 sheets** until Step 3 completes, then **≤5** if Step 3 ran). Use **`{Project Name} Evaluation Report`** and filename per `xlsx_report_export.md`. After the file is delivered, if Step 2 has not started, follow **After delivering an Excel file** in **Explicit next-step options**.
+**Excel export:** If the user asks for export after Step 1 only, build the workbook per `xlsx_report_export.md`: **`Summary`** + **`PRD_vs_generated`** + **`Recommendations`** (three tabs when Step 1 alone—see `xlsx_report_export.md`). Later exports follow `xlsx_report_export.md` (**≤5 worksheets** maximum: `Summary`, `PRD_vs_generated`, `generated_vs_team_erd`, `Context_compare` as applicable, plus **`Recommendations`** last). Use **`{Project Name} Evaluation Report`** and filename per `xlsx_report_export.md`. After the file is delivered, if Step 2 has not started, follow **After delivering an Excel file** in **Explicit next-step options**.
 
 ## Step 2 — Generated vs team ERD (scope gate, then one analysis path)
 
@@ -80,7 +80,7 @@ When the user provides the **engineering / reference ERD** (after Step 1 exists)
 3. **If the engineering ERD clearly does not cover the full PRD** (subset / slice): Output a **compact** bullet list (**only** what the team ERD *does* cover—e.g. date range, epic IDs, FR band, named program—**avoid long prose**). Then ask explicitly: *Reply **full scope** for a strict whole-document comparison (may penalize the generated ERD for breadth beyond the team doc), or **reduced scope** to score only the overlap slice with lenient rules (`scope_aligned_comparison_schema.md`).* **Stop and wait** for the user’s reply. Accept clear synonyms (e.g. “whole document”, “team slice only”, “overlap only”).
 4. **If scope is ambiguous** with high stakes: offer the same **full scope** vs **reduced scope** choice in one line after a minimal uncertainty note.
 
-**Do not** emit section scores, subsection metric blocks, or headline **Content alignment** until the mode is set (auto full-program, or user reply).
+**Do not** emit section scores, per-section **alignment** write-ups, or headline **Content alignment** until the mode is set (auto full-program, or user reply).
 
 After you ask **full scope** vs **reduced scope**, **do not** treat Step 2 as finished—**no** “What would you like to do next?” block yet; wait for the user’s choice (or a clarifying question). **Legacy phrasing (reduced scope only):** If the user says **scope-aligned**, **same delivery scope**, or old **“Step 3”** meaning *scoped team comparison*, treat that as **reduced scope** once the engineering ERD is in hand—still run the **scope gate** first if slice vs PRD is unclear. **Do not** confuse that with **Step 3 = research context (two ERDs)** after Step 2 completes.
 
@@ -88,11 +88,12 @@ When the user has **only** uploaded the team ERD and scope is **partial**, the n
 
 ### Analysis paths (exactly one per Step 2 completion)
 
-- **Full scope** — Whole-document, strict comparison per `structure_analysis_schema.md` + **`system_context_schema.md`**. Same rules as the historical “Step 2 only” pass: **seven** areas when System Context applies; subsection metric blocks with reasoning in §2–§8; no lenient subset rules.
-- **Reduced scope** — Same delivery scope / overlap slice per `scope_aligned_comparison_schema.md` + **`system_context_schema.md`**: declare slice, lenient rules, same content-first model via subsection metric parameters, scoped headline **Content alignment (scoped)** + confidence.
+- **Full scope** — Whole-document, strict comparison per `structure_analysis_schema.md` + **`system_context_schema.md`**. Same rules as the historical “Step 2 only” pass: **seven** areas when System Context applies; **alignment score** + **two bullet subsections** in §2–§8; no lenient subset rules.
+- **Reduced scope** — Same delivery scope / overlap slice per `scope_aligned_comparison_schema.md` + **`system_context_schema.md`**: declare slice, lenient rules, same content-first model (internal check rubric), scoped headline **Content alignment (scoped)** + confidence.
 
 **Shared rules (both paths)**
 
+- **Fidelity:** Step 2 output must be **grounded only in the uploaded** engineering and generated ERDs. **Do not** invent sections, bullets, quotes, IDs, or percentages. If content is missing or too thin to compare, **say so** and follow `structure_analysis_schema.md` / `scope_aligned_comparison_schema.md` for **N/A** and honest empty lists—**no** padding.
 - **Reference:** Engineering ERD only. Never say generated is “better/more complete.” Frame: what must **generated** change to align?
 - **Seven areas** when System Context exists in either doc (otherwise six): Document Metadata, Monthly Delivery Summary, Functional Deliverables, Non-Functional Deliverables, Engineering Epics, E2E Testing Plan, **System Context** (reduced path: evaluate System Context only **inside the declared slice** per `scope_aligned_comparison_schema.md`).
 - **Content:** Compare how each doc **articulates** requirements (granularity, Jira style, tables)—not full PRD coverage again (Step 1 remains authority for PRD coverage and hallucinations).
@@ -100,7 +101,7 @@ When the user has **only** uploaded the team ERD and scope is **partial**, the n
 - **Section classification:** In §4 and §5, wrong-section items vs engineering classification.
 - **Owner/Team column:** Flag if engineering has attribution and generated does not.
 - **Repository coverage:** Standing recommendation if UI-scoped deliverables but no frontend repo.
-- **Metrics:** section **content %** from subsection metric parameters per section; headline **Content alignment** (or **Content alignment (scoped)**) = mean of applicable section **content %**. **Do not** report structural % or combined rollups. **Do not** report only 0/50/100—always **% + parameter basis**. Subsection metric block + reasoning required for scored sections; `Parameters considered` must be point-based (no table), and each point must state why that parameter is used in the metric. Optional short structure bullets. **Confidence** on headline + overall.
+- **Metrics:** section **content %** from the same internal comparison-check rubric as `structure_analysis_schema.md` (sum / count); headline **Content alignment** (or **Content alignment (scoped)**) = mean of applicable section **content %**. **Do not** report structural % or combined rollups. **Do not** report only 0/50/100—always **% + basis** (e.g. `3.0/5`). For each scored section in the Markdown report: **alignment score** line + **two bullet subsections** (**Same in both ERDs**; **Engineering includes; generated misses or underplays**). **Do not** output **Metric used**, **Why this metric**, **Parameters considered**, or **Scope-aligned content score** as labeled blocks. Optional short structure bullets. **Confidence** on headline + overall.
 - **Recommendations:** **Generated ERD only** per the active schema’s closing sections.
 
 ### Step 2 closing (required)
@@ -110,13 +111,13 @@ After the Step 2 report body (full or reduced):
 1. **One-line mode reminder** — e.g. “This pass used **full scope** (whole documents)” or “This pass used **reduced scope** (declared slice only).” If **full scope** on a subset team ERD, optionally note that breadth mismatch may have lowered scores.
 2. **What would you like to do next?** — Append the **After Step 2** bullet list from **Explicit next-step options** (**Generate report**, **SharePoint** if connected, **Step 3**). **Do not** re-run the Step 2 scope gate from this closing list.
 
-When the user requests **Excel export** after Step 2: generate per `xlsx_report_export.md` — **`Summary`** + **`PRD_vs_generated`** + **`Vs_team_ERD`** (full scope) **or** **`Same_scope`** (reduced scope). After the file is delivered, follow **After delivering an Excel file** in **Explicit next-step options**.
+When the user requests **Excel export** after Step 2: generate per `xlsx_report_export.md` — **`Summary`** + **`PRD_vs_generated`** + **`generated_vs_team_erd`** (unified Step 2 tab; **Comparison mode / Scope applied** + **Scope** prose differ by full vs reduced; **same** reduced-format section order for all modes). After the file is delivered, follow **After delivering an Excel file** in **Explicit next-step options**.
 
 ## Step 3 — Research context (two ERDs)
 
 - **After Step 2** (or if the user explicitly asks for Step 3 / legacy **Step 4** when Step 2 is already done). **Do not** use the **PRD** for metrics, tables, or ledgers in this step—compare **only** **System Context** text **inside** the two ERDs per **`system_context_schema.md`**. **No** live GitHub or Confluence access.
 - **Pairing:** Offer **(1)** generated ERD vs **engineering ERD** from Step 2, and/or **(2)** vs **another ERD** (DOCX or Markdown) the user uploads. Ask which two documents to compare if ambiguous.
-- **Output:** Markdown report per **`system_context_schema.md`**: **Pair metrics table** only (**Content similarity**, **Inter-ERD consistency** qualitative, **Overall Step 3 score** = content similarity), **System Context Comparison** lists, cross-ERD ledger, contradiction ledger, interpretation. **Do not** report retired pair metrics (thematic consistency, inter-ERD consistency score, mention overlap) in chat or Excel.
+- **Output:** Markdown report per **`system_context_schema.md`**: **Pair metrics table** with **only two rows**: **Content similarity (System Context)** and **Inter-ERD consistency (qualitative)**—**do not** add **Overall Step 3 score** (it only duplicated content similarity). Then **System Context Comparison** lists, cross-ERD ledger, contradiction ledger, interpretation. **Do not** report retired pair metrics (thematic consistency, inter-ERD consistency score, mention overlap) in chat or Excel.
 
 ### Step 3 closing (required)
 
@@ -124,7 +125,7 @@ After the Step 3 Markdown report:
 
 - Append **What would you like to do next?** and the **After Step 3** bullet list from **Explicit next-step options** (**Generate report** for the full workbook including **Research context (two ERDs)**).
 
-- On request, build the workbook per `xlsx_report_export.md` (≤5 sheets when Step 3 completed).
+- On request, build the workbook per `xlsx_report_export.md` (≤5 worksheets when all steps completed; **`Recommendations`** tab required per `xlsx_report_export.md`).
 
 ## Output style
 

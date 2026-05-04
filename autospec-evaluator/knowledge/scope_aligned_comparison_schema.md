@@ -2,7 +2,7 @@
 
 Use this schema when **Step 2’s scope gate** (`workflow_operations.md`) is satisfied and the user chose **reduced scope** (overlap slice only)—not the separate historical “Step 3 after Step 2” flow.
 
-**Reader-facing name:** **Same delivery scope** (Excel tab `Same_scope`). Explains that only the **overlap slice** of the team ERD is scored.
+**Reader-facing name:** **Same delivery scope** (Markdown/chats; Excel uses worksheet **`generated_vs_team_erd`** with banner **Generated vs team ERD** — same unified layout as full-scope Excel; only **Scope** / declared-slice prose differs). Explains that only the **overlap slice** of the team ERD is scored.
 
 **System Context:** See **`system_context_schema.md`** for scoped evaluation of the seventh section.
 
@@ -12,7 +12,9 @@ Engineering ERDs often reflect **a slice of work** (e.g. one or two months, a si
 
 This pass uses the same **spirit** as full-scope Step 2—engineering ERD remains the reference—but only for the **overlap scope** the engineering ERD actually covers.
 
-**System Context:** When present, include **System Context** as the **seventh** section (same subsection-metric approach, **scoped**; optional structure bullets). See **`system_context_schema.md`**.
+**System Context:** When present, include **System Context** as the **seventh** section (same **alignment score + two bullet lists** approach, **scoped**; optional structure bullets). See **`system_context_schema.md`**.
+
+**Fidelity:** Same **no invention** rules as full-scope Step 2 in `structure_analysis_schema.md` (**Fidelity — no hallucination or padding**). Cite only **in-document** text for the declared slice. If a section is missing or empty in the engineering ERD, say so and use **N/A** (or honest empty bullets)—**do not** invent overlaps, gaps, or scores to fill the report.
 
 ## Preconditions
 
@@ -40,16 +42,16 @@ Apply these **instead of** strict whole-document expectations from **full-scope*
 | **Row / epic counts** | Compared to full reference | Compare **only within the scoped subset** (counts, granularity, style). |
 | **Empty or thin sections in engineering ERD** | May drag scores | If the engineering artifact is empty for a section **because scope is intentionally narrow**, use **N/A** for that section’s metrics (re-normalize), or explain **low check counts**—not a fake **0** for “missing volume.” |
 | **Layout / columns** | Full-table parity expected | Note **material** layout/column gaps only in **short bullets** for the scoped slice—**no** structure %. |
-| **Content alignment** | Full-section style match | Score subsection metric parameters only on **in-scope** text/rows; see §3. |
+| **Content alignment** | Full-section style match | Score internal checks only on **in-scope** text/rows; see §3. |
 
 **Still strict where it matters:** invented content, wrong milestone format, wrong capability labels, misclassified deliverables (monitoring/alerting in Functional instead of NFR), or **in-scope** rows that contradict the engineering ERD should still be flagged. Lenience is about **scope mismatch**, not factual, classification, or format errors inside the slice.
 
 ## 3. Metric definitions (reduced scope)
 
-Use the **same content-first model as full-scope Step 2** (`structure_analysis_schema.md`): per-section **content %** from scored subsection metric parameters (`0 / 0.5 / 1`). **Scope difference:** parameters are evaluated only on the **declared slice** (in-scope rows, epics, months).
+Use the **same content-first model as full-scope Step 2** (`structure_analysis_schema.md`): per-section **content %** from the same internal comparison-check rubric (`0 / 0.5 / 1` per check). **Scope difference:** checks are evaluated only on the **declared slice** (in-scope rows, epics, months).
 
-- **Do not** replace numbers with only 0/50/100. Always show **content % + parameter basis** (e.g. `2.5/5`).
-- **Subsection metric blocks (required):** Same subsection metric format as full-scope Step 2, evaluated **only on the declared slice**. Optional short **structure bullets** where material. Do not report section percentages without the subsection metric block and reasoning.
+- **Do not** replace numbers with only 0/50/100. Always show **content % + basis** (e.g. `2.5/5`).
+- **Section analysis (required):** Same **alignment score + two bullet subsections** format as full-scope Step 2 (`structure_analysis_schema.md`), evaluated **only on the declared slice**. Optional short **structure bullets** where material. Do not report section percentages without the per-section **alignment score** and the two comparison lists.
 - **N/A** sections: exclude from averages; re-normalize.
 - **Scope fairness note** (required): **If** the user also completed a **full-scope** Step 2 pass on the same pair in this session, compare **Content alignment (scoped)** % to that pass’s **Content alignment** % (e.g. “Full-scope content 42%; reduced-scope content 78%; delta driven by scoring only the January–February slice”). **Otherwise** one sentence: scores reflect **only** the declared slice, not whole-document parity—no delta table required.
 
@@ -63,7 +65,7 @@ Use the **same content-first model as full-scope Step 2** (`structure_analysis_s
 
 **Per-section table** (same columns as Step 2, label title **“Scoped to declared engineering scope”**):
 
-| Section | Content % | Content basis (parameter points) | Band (optional) |
+| Section | Content % | Content basis (x/y) | Band (optional) |
 |---------|-----------|----------------------------|-----------------|
 | … | …% | e.g. 3.5/5 | … |
 
@@ -71,12 +73,11 @@ Optional **full-scope vs reduced-scope** mini-table: headline metrics side-by-si
 
 ## 4. Section-by-section analysis
 
-Mirror Step 2’s section order (Document Metadata through **System Context**). For each:
+Mirror Step 2’s section order (Document Metadata through **System Context**). For each scored section:
 
-- **Subsection metric block** (required for scored sections): same metric table as Step 2; provide scoped parameter evidence as bullet points (no table), e.g. “granularity for in-scope functional rows only.”
-- **Reasoning block** (required): include `Metric used`, `Why this metric`, and `Parameters considered` for the scoped subsection score.
+- **Alignment score** + **two bullet subsections** (required): same format as full-scope Step 2 in `structure_analysis_schema.md`—**Same in both ERDs**; **Engineering includes; generated misses or underplays**. Scoped to the declared slice. If a list has nothing grounded in the slice, use **one** honest bullet (**None identified from the source documents** / **No engineering content in this section for the slice**)—**do not** invent gaps or overlaps. **Do not** use headings or blocks named **Metric used**, **Why this metric**, **Parameters considered**, or **Scope-aligned content score**.
 - **Structure:** optional bullets only—reference = engineering ERD **within scope**; assess generated ERD **only for the matching slice** when layout gaps matter.
-- **Content:** score subsection metric parameters on in-scope content only; parameter bullet points must match the subsection metric basis.
+- **Content:** apply the internal check rubric on in-scope content only; the reported **basis** (x/y) must match that rollup.
 - **Out-of-scope generated content:** optional bullet list “Present in generated ERD but outside engineering slice—not scored as gaps in this reduced-scope pass.”
 
 ## 5. Scoped alignment recommendations
@@ -91,4 +92,4 @@ Then apply **Step 2 closing** in `workflow_operations.md`: offer **Excel export*
 
 ---
 
-**Output:** Markdown only (plus optional **.xlsx**: see `xlsx_report_export.md` for sheet limits; Step 3 may add a fifth sheet when completed).
+**Output:** Markdown only (plus optional **.xlsx**: see `xlsx_report_export.md` for worksheet limits—**Summary**, detail tabs as applicable, and **`Recommendations`** last; **≤5** worksheets total).
